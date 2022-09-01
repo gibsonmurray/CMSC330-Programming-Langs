@@ -1,5 +1,16 @@
 def fib(n)
-    raise Exception, "Not Implemented"
+    ans = Array.new
+    if n == 0
+        # do nothing
+    elsif n == 1
+        ans << 0
+    elsif n == 2
+        ans << 0
+        ans << 1
+    else
+        ans << 0
+        ans << 1
+        for i in 
 end
 
 def isPalindrome(n)
