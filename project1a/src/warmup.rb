@@ -35,7 +35,9 @@ def isPalindrome(n)
 end
 
 def nthmax(n, a)
-    raise Exception, "Not Implemented"
+    a = a.sort.reverse
+    puts a
+    a[n]
 end
 
 def freq(s)
@@ -49,4 +51,3 @@ end
 def hashToArray(hash)
     raise Exception, "Not Implemented"
 end
-
