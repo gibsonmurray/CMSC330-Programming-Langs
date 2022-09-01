@@ -36,5 +36,3 @@ end
 def hashToArray(hash)
     raise Exception, "Not Implemented"
 end
-
-puts fib(10)
