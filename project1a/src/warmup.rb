@@ -1,5 +1,5 @@
 def fib(n)
-    ans = Array.new
+    ans = []
     if n == 0
         # do nothing
     elsif n == 1
@@ -10,7 +10,11 @@ def fib(n)
     else
         ans << 0
         ans << 1
-        for i in 
+        for i in 2..n do
+            ans << (ans[i - 2] + ans[i - 1])
+        end
+    end
+    ans
 end
 
 def isPalindrome(n)
@@ -32,3 +36,5 @@ end
 def hashToArray(hash)
     raise Exception, "Not Implemented"
 end
+
+puts fib(10)
