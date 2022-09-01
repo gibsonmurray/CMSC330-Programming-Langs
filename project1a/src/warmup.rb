@@ -7,8 +7,10 @@ def fib(n)
     else
         ans << 0
         ans << 1
-        for i in 2..n do
-            ans << (ans[i - 2] + ans[i - 1])
+        if n > 2 
+            for i in 2..n do
+                ans << (ans[i - 1] + ans[i])
+            end
         end
     end
     ans
@@ -33,3 +35,5 @@ end
 def hashToArray(hash)
     raise Exception, "Not Implemented"
 end
+
+puts fib(3)
