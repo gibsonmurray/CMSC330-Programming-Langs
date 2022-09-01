@@ -17,7 +17,21 @@ def fib(n)
 end
 
 def isPalindrome(n)
-    raise Exception, "Not Implemented"
+    check = []
+    str = n.to_s
+    for i in 0..str.length/2 do
+        check.push(str[i])
+    end
+    for i in str.length()/2..str.length() do
+        if check[-1] == str[i]
+            check.pop
+        end
+    end
+    if check.length() != 0
+        return false
+    else
+        return true
+    end
 end
 
 def nthmax(n, a)
@@ -35,3 +49,4 @@ end
 def hashToArray(hash)
     raise Exception, "Not Implemented"
 end
+
