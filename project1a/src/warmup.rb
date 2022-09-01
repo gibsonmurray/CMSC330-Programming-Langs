@@ -8,8 +8,8 @@ def fib(n)
         ans << 0
         ans << 1
         if n > 2 
-            for i in 2..n do
-                ans << (ans[i - 1] + ans[i])
+            for i in 2..n - 1 do
+                ans << (ans[i - 2] + ans[i - 1])
             end
         end
     end
