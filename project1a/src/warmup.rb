@@ -4,9 +4,6 @@ def fib(n)
         # do nothing
     elsif n == 1
         ans << 0
-    elsif n == 2
-        ans << 0
-        ans << 1
     else
         ans << 0
         ans << 1
