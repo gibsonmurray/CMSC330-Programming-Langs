@@ -41,7 +41,13 @@ def nthmax(n, a)
 end
 
 def freq(s)
-    raise Exception, "Not Implemented"
+    if s.length == 0
+        return ""
+    end
+    dict = Hash.new(0)
+    for c in s do
+        dict[s[i]]++
+    dict.max_by{|k,v| v}
 end
 
 def zipHash(arr1, arr2)
@@ -50,4 +56,7 @@ end
 
 def hashToArray(hash)
     raise Exception, "Not Implemented"
+end
+
+puts freq("hello").to_s
 end
