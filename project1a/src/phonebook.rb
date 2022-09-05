@@ -64,3 +64,4 @@ class Person
         @is_listed = is_listed
     end
 end
+end
