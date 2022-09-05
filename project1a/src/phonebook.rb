@@ -1,5 +1,6 @@
 class PhoneBook
     def initialize
+        @people = Hash.new
     end
 
     def add(name, number, is_listed)

@@ -45,18 +45,27 @@ def freq(s)
         return ""
     end
     dict = Hash.new(0)
-    for c in s do
-        dict[s[i]]++
-    dict.max_by{|k,v| v}
+    for i in 1..s.length do
+        dict[s[i]] = dict[s[i]] + 1
+    end
+    dict.max_by{|k,v| v}[0]
 end
 
 def zipHash(arr1, arr2)
-    raise Exception, "Not Implemented"
+    if arr1.length != arr2.length
+        return nil
+    end
+    ans = Hash.new
+    for i in 0..(arr1.length - 1)
+        ans[arr1[i]] = arr2[i]
+    end
+    ans
 end
 
 def hashToArray(hash)
-    raise Exception, "Not Implemented"
-end
-
-puts freq("hello").to_s
+    ans = []
+    hash.each do |key, value|
+        ans << [key, value]
+    end
+    ans
 end
