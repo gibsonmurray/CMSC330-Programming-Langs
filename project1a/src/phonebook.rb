@@ -11,15 +11,14 @@ class PhoneBook
                 if check == false
                     return false
                 end
-                if i != 3 && i != 7 && number.numeric? == false
+                if i != 3 && i != 7 && (is_digit(number[i]) == false)
                     check = false
                 end
                 if (i == 3 || i == 7) && number[i] != '-'
                     check == false
                 end
             end
-        else
-            return false
+        return false
         end
         new_p = Person.new(name, number, is_listed)
         if @people_listed.hash_key?(name)
@@ -54,6 +53,11 @@ class PhoneBook
             end
         end
         ans
+    end
+
+    def is_digit?(s)
+        ascii = s.ord
+        ascii >= 48 && ascii <= 57
     end
 end
 
