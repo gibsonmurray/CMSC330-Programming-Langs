@@ -11,12 +11,7 @@ class PhoneBook
                 if check == false
                     return false
                 end
-                if i != 3 && i != 7 && (is_digit(number[i]) == false)
-                    check = false
-                end
-                if (i == 3 || i == 7) && number[i] != '-'
-                    check == false
-                end
+                if number =~/\d{1,3}-\d{1,3}-\d{1,4}/
             end
         return false
         end
