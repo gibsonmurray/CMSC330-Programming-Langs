@@ -16,24 +16,14 @@ def fib(n)
     ans
 end
 
-def isPalindrome(n) #redo
-    check = []
+def isPalindrome(n) 
     str = n.to_s
-    for i in 0..str.length/2 do
-        check.push(str[i])
-    end
-    p check
-    for i in str.length()/2..str.length() do
-        if check[-1] == str[i]
-            check.pop
+    for i in 0..((str.length/2).floor)
+        if str[i] != str[-1-i]
+            return false
         end
     end
-    p check
-    if check.length() != 0
-        return false
-    else
-        return true
-    end
+    true
 end
 
 def nthmax(n, a)
