@@ -4,18 +4,16 @@ class PhoneBook
     end
 
     def add(name, number, is_listed)
-        if number.length == 12
-            check = true
-        end
         if (number =~ /\d{1,3}-\d{1,3}-\d{1,4}/) == nil
             return false
         end
         for arr in @people
-            if arr[0] == name && arr[2] == true
+            if arr[0] == name && arr[1] == number && arr[2] == is_listed
+                return false
+            elsif arr[1] == number && arr[2] && is_listed
                 return false
             end
         end
-        p @people
         @people.push([name, number, is_listed])
         true
     end

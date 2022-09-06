@@ -36,7 +36,6 @@ end
 
 def nthmax(n, a)
     a = a.sort.reverse
-    puts a
     a[n]
 end
 
