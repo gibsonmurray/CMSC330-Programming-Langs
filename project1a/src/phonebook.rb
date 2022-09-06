@@ -1,66 +1,43 @@
 class PhoneBook
     def initialize
-        @people_unlisted = [] #redo the initialization w a 2d array
-        @people_listed = {}
+        @people = [][] #indices: 0 = name, 1 = number, 2 = listed
     end
 
     def add(name, number, is_listed)
         if number.length == 12
             check = true
         end
-        if !(number =~ /^\d{3}-\d{3}-\d{4}$/)
+        if (number =~ /^\d{3}-\d{3}-\d{4}$/) == nil
             return false
         end
-        new_p = Person.new(name, number, is_listed)
-        if @people_listed.has_key?(name)
-            @people_unlisted.push(new_p)
-        else
-            @people_unlisted = {name => new_p}
-        end
+        @people.push([name, number, is_listed])
         true
     end
 
     def lookup(name)
-        if @people_listed.has_key?(name)
-            return @people_listed[name]
-        else
-            return nil
+        for arr in @people
+            if name == arr[0]
+                return arr[1]
+            end
+        end
+        nil
     end
 
     def lookupByNum(number)
-       @people_listed.key(Person.number) #may or may not work
+        for arr in @people
+            if number == arr[1]
+                eturn arr[0]
+            end
+        end
+        nil
     end
 
     def namesByAc(areacode)
         ans = []
-        for i in 0..(@people_unlisted.length - 1)
-            if @people_unlisted[i][0..2] == areacode[0..2]
-                ans.push(@people_unlisted[i].name)
+        for arr in @people
+            if areacode == arr[1][0..2]
+                ans.push(arr[0])
             end
         end
-        @people_listed.each do |key, value|
-            if value.number[0..2] == areacode[0..2]
-                ans.push(key)
-            end
-        end
-        ans
     end
-
-    def is_digit?(s)
-        ascii = s.ord
-        ascii >= 48 && ascii <= 57
-    end
-end
-
-class Person
-    def initialize(name, number, is_listed)
-        @name = name
-        @number = number
-        @is_listed = is_listed
-    end
-
-    def to_s
-        @name + " " + @number + @is_listed.to_s
-    end
-end
 end
