@@ -1,15 +1,21 @@
 class PhoneBook
     def initialize
-        @people = [][] #indices: 0 = name, 1 = number, 2 = listed
+        @people = Array.new(0){Array.new(0)}
     end
 
     def add(name, number, is_listed)
         if number.length == 12
             check = true
         end
-        if (number =~ /^\d{3}-\d{3}-\d{4}$/) == nil
+        if (number =~ /\d{1,3}-\d{1,3}-\d{1,4}/) == nil
             return false
         end
+        for arr in @people
+            if arr[0] == name && arr[2] == true
+                return false
+            end
+        end
+        p @people
         @people.push([name, number, is_listed])
         true
     end
@@ -26,7 +32,7 @@ class PhoneBook
     def lookupByNum(number)
         for arr in @people
             if number == arr[1] && arr[2] == true
-                eturn arr[0]
+                return arr[0]
             end
         end
         nil
@@ -39,5 +45,6 @@ class PhoneBook
                 ans.push(arr[0])
             end
         end
+        ans
     end
 end
