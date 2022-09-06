@@ -8,7 +8,7 @@ def fib(n)
         ans << 0
         ans << 1
         if n > 2 
-            for i in 2..n - 1 do
+            for i in 2..(n - 1) do
                 ans << (ans[i - 2] + ans[i - 1])
             end
         end
@@ -16,17 +16,19 @@ def fib(n)
     ans
 end
 
-def isPalindrome(n)
+def isPalindrome(n) #redo
     check = []
     str = n.to_s
     for i in 0..str.length/2 do
         check.push(str[i])
     end
+    p check
     for i in str.length()/2..str.length() do
         if check[-1] == str[i]
             check.pop
         end
     end
+    p check
     if check.length() != 0
         return false
     else

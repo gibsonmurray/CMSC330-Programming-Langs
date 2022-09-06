@@ -16,7 +16,7 @@ class PublicTests < MiniTest::Test
     end
 
     def test_public_ispalindrome
-        assert_equal(true, isPalindrome(0))
+        assert_equal(true, isPalindrome(12344321))
         assert_equal(true, isPalindrome(1))
         assert_equal(false, isPalindrome(10))
         assert_equal(true, isPalindrome(101))
