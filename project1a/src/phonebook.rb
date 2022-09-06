@@ -4,11 +4,11 @@ class PhoneBook
     end
 
     def add(name, number, is_listed)
-        if (number =~ /\d{1,3}-\d{1,3}-\d{1,4}/) == nil
+        if (number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == nil
             return false
         end
         for arr in @people
-            if arr[0] == name && arr[1] == number && arr[2] == is_listed
+            if arr[0] == name
                 return false
             elsif arr[1] == number && arr[2] && is_listed
                 return false
