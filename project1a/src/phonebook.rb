@@ -1,22 +1,18 @@
 class PhoneBook
     def initialize
-        @people_unlisted = []
+        @people_unlisted = [] #redo the initialization w a 2d array
         @people_listed = {}
     end
 
     def add(name, number, is_listed)
         if number.length == 12
             check = true
-            for i in 0..(number.length - 1)
-                if check == false
-                    return false
-                end
-                if number =~/\d{1,3}-\d{1,3}-\d{1,4}/
-            end
-        return false
+        end
+        if !(number =~ /^\d{3}-\d{3}-\d{4}$/)
+            return false
         end
         new_p = Person.new(name, number, is_listed)
-        if @people_listed.hash_key?(name)
+        if @people_listed.has_key?(name)
             @people_unlisted.push(new_p)
         else
             @people_unlisted = {name => new_p}
@@ -25,7 +21,7 @@ class PhoneBook
     end
 
     def lookup(name)
-        if @people_listed.hash_key?(name)
+        if @people_listed.has_key?(name)
             return @people_listed[name]
         else
             return nil
@@ -61,6 +57,10 @@ class Person
         @name = name
         @number = number
         @is_listed = is_listed
+    end
+
+    def to_s
+        @name + " " + @number + @is_listed.to_s
     end
 end
 end
