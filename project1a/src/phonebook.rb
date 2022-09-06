@@ -16,7 +16,7 @@ class PhoneBook
 
     def lookup(name)
         for arr in @people
-            if name == arr[0]
+            if name == arr[0] && arr[2] == true
                 return arr[1]
             end
         end
@@ -25,7 +25,7 @@ class PhoneBook
 
     def lookupByNum(number)
         for arr in @people
-            if number == arr[1]
+            if number == arr[1] && arr[2] == true
                 eturn arr[0]
             end
         end
