@@ -63,6 +63,7 @@ class PublicTests < MiniTest::Test
         assert_equal(true, @phonebook.add("Eve", "123-456-7890", true)) #
         assert_equal(false, @phonebook.add("Rob", "123-456-7890", true)) #
         assert_equal(true, @phonebook.add("Johnny B. Good", "123-456-7890", false)) #
+        assert_equal(false, @phonebook.add("Johnny B. Good", "123-456-7890", true)) #
     end
 
     def test_public_phonebook_lookup
