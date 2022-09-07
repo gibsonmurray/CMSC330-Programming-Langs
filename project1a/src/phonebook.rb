@@ -5,9 +5,9 @@ class PhoneBook
 
     def add(name, number, is_listed)
         for arr in @people
-            if arr[0] == name # if person is the same
+            if number.length == 12 && ((number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == nil) # if number is invalid
                 return false
-            elsif number.length == 12 && ((number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == nil) # if number is invalid
+            elsif arr[0] == name # if person is the same
                 return false
             elsif arr[1] == number && arr[2] == true && is_listed == true # if number is the same as another entry and it was listed
                 return false
