@@ -4,14 +4,17 @@ class PhoneBook
     end
 
     def add(name, number, is_listed)
-        if (number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == 0
-            for arr in @people
-                if (arr[0] != name && (arr[1] == number && arr[2] == false)) || (arr[0] != name && (arr[1] == number && is_listed == false))
-                    @people.push([name, number, is_listed])
-                end
+        for arr in @people
+            if arr[0] == name # if person is the same
+                return false
+            elsif number.length == 12 && ((number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == nil) # if number is invalid
+                return false
+            elsif arr[1] == number && arr[2] == true && is_listed == true # if number is the same as another entry and it was listed
+                return false
             end
         end
-        false
+        @people << [name, number, is_listed] # otherwise add it to the phonebook
+        true
     end
 
     def lookup(name)
