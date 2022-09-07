@@ -4,11 +4,11 @@ class PhoneBook
     end
 
     def add(name, number, is_listed)
+        if number.length != 12 || ((number =~ /^\d{3}\-\d{3}\-\d{4}$/) == nil) # if number is invalid
+            return false
+        end
         for arr in @people
             if arr[0] == name # if person is the same
-                return false
-            end
-            if number.length == 12 && ((number =~ /^\d{1,3}\-\d{1,3}\-\d{1,4}$/) == nil) # if number is invalid
                 return false
             end
             if arr[1] == number && arr[2] == true && is_listed == true # if number is the same as another entry and it was listed
