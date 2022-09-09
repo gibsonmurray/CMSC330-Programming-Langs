@@ -1,6 +1,10 @@
 # Project 1b: Battleship Game
 
+<<<<<<< HEAD
 Due: September 16, 2022 at 11:59 PM (late September 17, *10% penalty*).
+=======
+Due: ~~September 16, 2022 at 11:59 PM (late September 17, *10% penalty*)~~ September 18, 2022 at 11:59 PM (late September 19, *10% penalty*)
+>>>>>>> 058768405f019db054595d213d8fd96a4a4e6dfe
 
 Points: 30 public, 36 semipublic, 34 secret
 
