@@ -6,6 +6,7 @@ class GameBoard
     def initialize(max_row, max_column)
         @max_row = max_row
         @max_column = max_column
+        @grid = Array.new(max_row, Array.new(max_column, false))
     end
 
     # adds a Ship object to the GameBoard
@@ -13,7 +14,21 @@ class GameBoard
     # Returns true on successfully added the ship, false otherwise
     # Note that Position pair starts from 1 to max_row/max_column
     def add_ship(ship)
-        true
+        start_r = ship.start_position.row
+        start_c = ship.start_position.column
+        if ship.orientation == "Up"
+            for row in start_r..(start_r - ship.size)
+                # figure it out
+        end
+        if ship.orientation == "Down"
+
+        end
+        if ship.orientation == "Left"
+
+        end
+        if ship.orientation == "Right"
+
+        end
     end
 
     # return Boolean on whether attack was successful or not (hit a ship?)
