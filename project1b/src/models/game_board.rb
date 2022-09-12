@@ -98,24 +98,35 @@ class GameBoard
             end
         end
         # printing grid:
-        for row in 1..@max_row            # 0th index is just for formatting
-            if row == 1 
+        for row in 0..@max_row            # 0th index is just for formatting
+            if row == 0 
                 for space in 0..3         # 4 spaces
                     print " "
                 end
             end
             for col in 1..@max_column 
-                if row == 1 
+                if row == 0
                     print (col).to_s    # prints column number
                     if col < 10 
                         spaces.call
                     end
+                else
+                    slot1 = "-"
+                    slot2 = "-"
+                    if @grid[row][col] == 0 
+                        # remove '0' & continue once there is a way to track ship vs hits
+                    end
+                    if col == 1
+                        print (row).to_s + ":  "
+                    end
+
                 end
+            
             end
             puts "\n"
         end
     end
 end
 
-test = GameBoard.new(10, 10)
-puts test
+# test = GameBoard.new(10, 10)
+# puts test
