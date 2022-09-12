@@ -101,25 +101,23 @@ class GameBoard
             end
         end
         # printing grid:
-        for row in 0..@max_row            # 0th index is just for formatting
+        for row in 0..@max_row           # 0th index is just for formatting
             if row == 0 
-                for space in 0..3         # 4 spaces
-                    print " "
-                end
+                spaces.call
             end
-            for col in 1..@max_column 
-                if row == 0
-                    print (col).to_s    # prints column number
+            for col in 0..@max_column
+                if row == 0 && col < 10
+                    print (col + 1).to_s    # prints column number
                     if col < 10 
                         spaces.call
                     end
                 else
                     slot1 = "-"
                     slot2 = "-"
-                    if @grid[row][col][0] == true
+                    if @grid[row - 1][col - 1][0] == true
                         slot1 = "S"                 # S = ship
                     end
-                    if @grid[row][col][1] == true
+                    if @grid[row - 1][col - 1][1] == true
                         slot2 = "H"                 # H = hit
                     end
                     if col == 1
@@ -128,12 +126,13 @@ class GameBoard
                             print " "
                         end
                     end
-                    print " " + slot1 + ", " + slot2 + " "
-                    if col < @max_column
-                        print " "
+                    if row > 0 && col > 0
+                        print " " + slot1 + ", " + slot2 + " "
+                        if col < @max_column
+                            print "|"
+                        end
                     end
                 end
-            
             end
             puts "\n"
         end
@@ -141,4 +140,7 @@ class GameBoard
 end
 
 test = GameBoard.new(10, 10)
+position = Position.new(1, 1)
+ship = Ship.new(position, "Down", 3)
+test.add_ship(ship)
 puts test
