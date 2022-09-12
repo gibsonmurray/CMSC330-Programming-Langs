@@ -115,13 +115,22 @@ class GameBoard
                 else
                     slot1 = "-"
                     slot2 = "-"
-                    if @grid[row][col] == 0 
-                        # remove '0' & continue once there is a way to track ship vs hits
+                    if @grid[row][col][0] == true
+                        slot1 = "S"                 # S = ship
+                    end
+                    if @grid[row][col][1] == true
+                        slot2 = "H"                 # H = hit
                     end
                     if col == 1
-                        print (row).to_s + ":  "
+                        print (row).to_s + ": "
+                        if row < @max_row
+                            print + " "
+                        end
                     end
-
+                    print " " + slot1 + ", " + slot2 + " "
+                    if col < @max_column
+                        print " "
+                    end
                 end
             
             end
@@ -130,5 +139,5 @@ class GameBoard
     end
 end
 
-# test = GameBoard.new(10, 10)
-# puts test
+test = GameBoard.new(10, 10)
+puts test
