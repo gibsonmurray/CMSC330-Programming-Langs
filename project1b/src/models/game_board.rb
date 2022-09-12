@@ -6,7 +6,7 @@ class GameBoard
     def initialize(max_row, max_column)
         @max_row = max_row
         @max_column = max_column
-        @grid = Array.new(max_row, Array.new(max_column, false)) # false/true = no ship in position/ship in position
+        @grid = Array.new(max_row, Array.new(max_column, [false, false])) # false = no ship (0), no hit (1) // true otherwise
     end
 
     # adds a Ship object to the GameBoard
@@ -26,42 +26,42 @@ class GameBoard
         # if check passes then the ship will be added
         if ship.orientation == "Up" 
             for row in start_r..(start_r - ship.size)     # minus b/c going up in grid
-                if @grid[row][start_c] == true then
+                if @grid[row][start_c][0] == true then
                     return false
                 end
             end
             for row in start_r..(start_r - ship.size) 
-                @grid[row][start_c] = true                  # true = means a ship is in the grid
+                @grid[row][start_c][0] = true                  # true = means a ship is in the grid
             end
         end
         if ship.orientation == "wn" 
             for row in start_r..(start_r + ship.size)     # plus because going wn in grid
-                if @grid[row][start_c] == true 
+                if @grid[row][start_c][0] == true 
                     return false
                 end
             end
             for row in start_r..(start_r + ship.size) 
-                @grid[row][start_c] = true
+                @grid[row][start_c][0] = true
             end
         end
         if ship.orientation == "Left" 
             for col in start_c..(start_c - ship.size)     # minus because going left in grid
-                if @grid[start_r][col] == true 
+                if @grid[start_r][col][0] == true 
                     return false
                 end
             end
             for col in start_c..(start_c - ship.size) 
-                @grid[start_r][col] = true
+                @grid[start_r][col][0] = true
             end
         end
         if ship.orientation == "Right" 
             for col in start_c..(start_c + ship.size)     # plus because going right in grid
-                if @grid[start_r][col] == true 
+                if @grid[start_r][col][0] == true 
                     return false
                 end
             end
             for col in start_c..(start_c + ship.size) 
-                @grid[start_r][col] = true
+                @grid[start_r][col][0] = true
             end
         end
     end
@@ -70,7 +70,9 @@ class GameBoard
     # return nil if Position is invalid (out of the boundary defined)
     def attack_pos(position)
         # check position
-
+        if position.row > 10 && position.row < 1 && position.column > 10 && position.column < 1
+            return nil
+        end
         # update your grid
 
         # return whether the attack was successful or not
