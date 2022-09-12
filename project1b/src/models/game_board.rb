@@ -6,7 +6,8 @@ class GameBoard
     def initialize(max_row, max_column)
         @max_row = max_row
         @max_column = max_column
-        @grid = Array.new(max_row, Array.new(max_column, [false, false])) # false = no ship (0), no hit (1) // true otherwise
+        @grid = Array.new(max_row) {Array.new(max_column) {Array.new(2, false)}} # false = no ship (0), no hit (1) // true otherwise
+        
     end
 
     # adds a Ship object to the GameBoard
@@ -124,7 +125,7 @@ class GameBoard
                     if col == 1
                         print (row).to_s + ": "
                         if row < @max_row
-                            print + " "
+                            print " "
                         end
                     end
                     print " " + slot1 + ", " + slot2 + " "
