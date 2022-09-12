@@ -1,3 +1,6 @@
+require_relative 'position'
+require_relative 'ship'
+
 class GameBoard
     # @max_row is an `Integer`
     # @max_column is an `Integer`
@@ -15,56 +18,69 @@ class GameBoard
     # Returns true on successfully added the ship, false otherwise
     # Note that Position pair starts from 1 to max_row/max_column
     def add_ship(ship)
-        start_r = ship.start_position.row
-        start_c = ship.start_position.column
-
-        # checking to make sure ship will not go out of bounds
-        if start_r + ship.size > 10 || start_c + ship.size > 10 then
-            return false
-        end
-
         # checking to see if a ship is already in one of the positions intended to take up
         # if check passes then the ship will be added
-        if ship.orientation == "Up" 
-            for row in start_r..(start_r - ship.size)     # minus b/c going up in grid
-                if @grid[row][start_c][0] == true then
+        if ship.orientation == "Up"
+            start_r = ship.start_position.row
+            start_c = ship.start_position.column
+            if start_r - ship.size < 0                    # checking to make sure ship will not go out of bounds
+                return false
+            end
+            for row in (start_r - ship.size)..start_r - 1     # minus b/c going up in grid .. minus because cant count highest grid value
+                if @grid[row][start_c][0] == true
                     return false
                 end
             end
-            for row in start_r..(start_r - ship.size) 
+            for row in (start_r - ship.size)..start_r - 1
                 @grid[row][start_c][0] = true                  # true = means a ship is in the grid
             end
         end
-        if ship.orientation == "wn" 
-            for row in start_r..(start_r + ship.size)     # plus because going wn in grid
+        if ship.orientation == "Down" 
+            start_r = ship.start_position.row - 1
+            start_c = ship.start_position.column - 1
+            if start_r + ship.size > 10                       # checking to make sure ship will not go out of bounds
+                return false
+            end
+            for row in start_r..(start_r + ship.size - 1)     # starts at starting point..plus because going down in grid
                 if @grid[row][start_c][0] == true 
                     return false
                 end
             end
-            for row in start_r..(start_r + ship.size) 
+            for row in start_r..(start_r + ship.size - 1) 
                 @grid[row][start_c][0] = true
             end
         end
         if ship.orientation == "Left" 
-            for col in start_c..(start_c - ship.size)     # minus because going left in grid
+            start_r = ship.start_position.row
+            start_c = ship.start_position.column
+            if start_c - ship.size < 0                      # checking to make sure ship will not go out of bounds
+                return false
+            end
+            for col in (start_c - ship.size)..start_c - 1    # minus b/c going up in grid .. minus because cant count highest grid value
                 if @grid[start_r][col][0] == true 
                     return false
                 end
             end
-            for col in start_c..(start_c - ship.size) 
+            for col in (start_c - ship.size)..start_c - 1
                 @grid[start_r][col][0] = true
             end
         end
         if ship.orientation == "Right" 
-            for col in start_c..(start_c + ship.size)     # plus because going right in grid
+            start_r = ship.start_position.row - 1
+            start_c = ship.start_position.column - 1
+            if start_c + ship.size > 10                       # checking to make sure ship will not go out of bounds
+                return false
+            end
+            for col in start_c..(start_c + ship.size - 1)     # starts at starting point..plus because going right in grid
                 if @grid[start_r][col][0] == true 
                     return false
                 end
             end
-            for col in start_c..(start_c + ship.size) 
+            for col in start_c..(start_c + ship.size - 1) 
                 @grid[start_r][col][0] = true
             end
         end
+        true
     end
 
     # return Boolean on whether attack was successful or not (hit a ship?)
@@ -94,6 +110,7 @@ class GameBoard
 
 
     # String representation of GameBoard (optional but recommended)
+    # only works with a grid size 10
     def to_s
         spaces = Proc.new do
             for space in 0..5               # 6 spaced format
@@ -140,7 +157,13 @@ class GameBoard
 end
 
 test = GameBoard.new(10, 10)
-position = Position.new(1, 1)
-ship = Ship.new(position, "Down", 3)
-test.add_ship(ship)
+position1 = Position.new(4, 10)
+position2 = Position.new(8, 8)
+position3 = Position.new(1, 2)
+ship1 = Ship.new(position1, "Left", 10)
+ship2 = Ship.new(position2, "Down", 3)
+ship3 = Ship.new(position3, "Down", 5)
+puts test.add_ship(ship1)
+puts test.add_ship(ship2)
+puts test.add_ship(ship3)
 puts test
