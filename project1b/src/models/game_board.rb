@@ -22,26 +22,26 @@ class GameBoard
         # if check passes then the ship will be added
         if ship.orientation == "Up"
             start_r = ship.start_position.row
-            start_c = ship.start_position.column
-            if start_r - ship.size < 0                    # checking to make sure ship will not go out of bounds
+            start_c = ship.start_position.column - 1            # has to subtract 1 for sake of indexing
+            if start_r - ship.size < 0                          # checking to make sure ship will not go out of bounds
                 return false
             end
-            for row in (start_r - ship.size)..start_r - 1     # minus b/c going up in grid .. minus because cant count highest grid value
+            for row in (start_r - ship.size)..start_r - 1       # minus b/c going up in grid .. minus because cant count highest grid value
                 if @grid[row][start_c][0] == true
                     return false
                 end
             end
             for row in (start_r - ship.size)..start_r - 1
-                @grid[row][start_c][0] = true                  # true = means a ship is in the grid
+                @grid[row][start_c][0] = true                   # true = means a ship is in the grid
             end
         end
         if ship.orientation == "Down" 
             start_r = ship.start_position.row - 1
             start_c = ship.start_position.column - 1
-            if start_r + ship.size > 10                       # checking to make sure ship will not go out of bounds
+            if start_r + ship.size > 10                         # checking to make sure ship will not go out of bounds
                 return false
             end
-            for row in start_r..(start_r + ship.size - 1)     # starts at starting point..plus because going down in grid
+            for row in start_r..(start_r + ship.size - 1)       # starts at starting point..plus because going down in grid
                 if @grid[row][start_c][0] == true 
                     return false
                 end
@@ -51,12 +51,12 @@ class GameBoard
             end
         end
         if ship.orientation == "Left" 
-            start_r = ship.start_position.row
+            start_r = ship.start_position.row - 1               # has to subtract 1 for sake of indexing
             start_c = ship.start_position.column
-            if start_c - ship.size < 0                      # checking to make sure ship will not go out of bounds
+            if start_c - ship.size < 0                          # checking to make sure ship will not go out of bounds
                 return false
             end
-            for col in (start_c - ship.size)..start_c - 1    # minus b/c going up in grid .. minus because cant count highest grid value
+            for col in (start_c - ship.size)..start_c - 1       # minus b/c going up in grid .. minus because cant count highest grid value
                 if @grid[start_r][col][0] == true 
                     return false
                 end
@@ -68,10 +68,10 @@ class GameBoard
         if ship.orientation == "Right" 
             start_r = ship.start_position.row - 1
             start_c = ship.start_position.column - 1
-            if start_c + ship.size > 10                       # checking to make sure ship will not go out of bounds
+            if start_c + ship.size > 10                         # checking to make sure ship will not go out of bounds
                 return false
             end
-            for col in start_c..(start_c + ship.size - 1)     # starts at starting point..plus because going right in grid
+            for col in start_c..(start_c + ship.size - 1)       # starts at starting point..plus because going right in grid
                 if @grid[start_r][col][0] == true 
                     return false
                 end
@@ -113,18 +113,18 @@ class GameBoard
     # only works with a grid size 10
     def to_s
         spaces = Proc.new do
-            for space in 0..5               # 6 spaced format
+            for space in 0..5                               # 6 spaced format
                 print " "
             end
         end
         # printing grid:
-        for row in 0..@max_row           # 0th index is just for formatting
+        for row in 0..@max_row                              # 0th index is just for formatting
             if row == 0 
                 spaces.call
             end
             for col in 0..@max_column
                 if row == 0 && col < 10
-                    print (col + 1).to_s    # prints column number
+                    print (col + 1).to_s                    # prints column number
                     if col < 10 
                         spaces.call
                     end
@@ -132,10 +132,10 @@ class GameBoard
                     slot1 = "-"
                     slot2 = "-"
                     if @grid[row - 1][col - 1][0] == true
-                        slot1 = "S"                 # S = ship
+                        slot1 = "S"                         # S = ship
                     end
                     if @grid[row - 1][col - 1][1] == true
-                        slot2 = "H"                 # H = hit
+                        slot2 = "H"                         # H = hit
                     end
                     if col == 1
                         print (row).to_s + ": "
@@ -156,14 +156,18 @@ class GameBoard
     end
 end
 
+# Tests
 test = GameBoard.new(10, 10)
 position1 = Position.new(4, 10)
 position2 = Position.new(8, 8)
-position3 = Position.new(1, 2)
-ship1 = Ship.new(position1, "Left", 10)
+position3 = Position.new(4, 2)
+position4 = Position.new(8, 2)
+ship1 = Ship.new(position1, "Left", 8)
 ship2 = Ship.new(position2, "Down", 3)
-ship3 = Ship.new(position3, "Down", 5)
+ship3 = Ship.new(position3, "Up", 4)
+ship4 = Ship.new(position4, "Right", 4)
 puts test.add_ship(ship1)
 puts test.add_ship(ship2)
 puts test.add_ship(ship3)
+puts test.add_ship(ship4)
 puts test
