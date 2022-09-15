@@ -10,7 +10,8 @@ class GameBoard
         @max_row = max_row
         @max_column = max_column
         @grid = Array.new(max_row) {Array.new(max_column) {Array.new(2, false)}} # false = no ship (0), no hit (1) // true otherwise
-        
+        @num_hit = 0
+        @total_sizes = 0
     end
 
     # adds a Ship object to the GameBoard
@@ -80,6 +81,7 @@ class GameBoard
                 @grid[start_r][col][0] = true
             end
         end
+        @total_sizes += ship.size
         true
     end
 
@@ -104,22 +106,21 @@ class GameBoard
 
     # Number of successful attacks made by the "opponent" on this player GameBoard
     def num_successful_attacks
-        ans = 0
         for row in 0..@grid.length - 1
             for col in 0..@grid.length - 1
                 if @grid[row][col][0] && @grid[row][col][1]
-                    ans += 1
+                    @num_hit += 1
                 end
             end
         end
-        ans
+        @num_hit
     end
 
     # returns Boolean
     # returns True if all the ships are sunk.
     # Return false if at least one ship hasn't sunk.
     def all_sunk?
-        true
+        @num_hit == @total_sizes ? true : false
     end
 
 
@@ -172,18 +173,20 @@ end
 
 # Tests
 test = GameBoard.new(10, 10)
-position1 = Position.new(4, 10)
+# position1 = Position.new(4, 10)
 position2 = Position.new(8, 8)
-position3 = Position.new(4, 2)
-position4 = Position.new(8, 2)
-ship1 = Ship.new(position1, "Left", 8)
+# position3 = Position.new(4, 2)
+# position4 = Position.new(8, 2)
+# ship1 = Ship.new(position1, "Left", 8)
 ship2 = Ship.new(position2, "Down", 3)
-ship3 = Ship.new(position3, "Up", 4)
-ship4 = Ship.new(position4, "Right", 4)
-puts test.add_ship(ship1)
+# ship3 = Ship.new(position3, "Up", 4)
+# ship4 = Ship.new(position4, "Right", 4)
+# puts test.add_ship(ship1)
 puts test.add_ship(ship2)
-puts test.add_ship(ship3)
-puts test.add_ship(ship4)
-puts test.attack_pos(position1)
+# puts test.add_ship(ship3)
+# puts test.add_ship(ship4)
+puts test.attack_pos(position2)
+test.attack_pos(Position.new(9,8))
+test.attack_pos(Position.new(10,8))
 puts test.num_successful_attacks
-puts test
+puts test.all_sunk?
