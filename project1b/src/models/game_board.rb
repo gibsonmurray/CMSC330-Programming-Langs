@@ -100,19 +100,13 @@ class GameBoard
         # return whether the attack was successful or not
         if @grid[row][col][0]
             hit = true
+            @num_hit += 1
         end
         hit
     end
 
     # Number of successful attacks made by the "opponent" on this player GameBoard
     def num_successful_attacks
-        for row in 0..@grid.length - 1
-            for col in 0..@grid.length - 1
-                if @grid[row][col][0] && @grid[row][col][1]
-                    @num_hit += 1
-                end
-            end
-        end
         @num_hit
     end
 
@@ -120,6 +114,8 @@ class GameBoard
     # returns True if all the ships are sunk.
     # Return false if at least one ship hasn't sunk.
     def all_sunk?
+        puts @num_hit.to_s
+        puts @total_sizes.to_s
         @num_hit == @total_sizes ? true : false
     end
 
@@ -166,31 +162,29 @@ class GameBoard
                     end
                 end
             end
-            if row < @max_row
-                puts "\n"
-            end
+            puts "\n"
         end
         nil
     end
 end
 
 # Tests
-test = GameBoard.new(10, 10)
-position1 = Position.new(4, 10)
-position2 = Position.new(8, 8)
-position3 = Position.new(4, 2)
-position4 = Position.new(8, 2)
-ship1 = Ship.new(position1, "Left", 8)
-ship2 = Ship.new(position2, "Down", 3)
-ship3 = Ship.new(position3, "Up", 4)
-ship4 = Ship.new(position4, "Right", 4)
-test.add_ship(ship1)
-test.add_ship(ship2)
-test.add_ship(ship3)
-test.add_ship(ship4)
-test.attack_pos(position2)
-test.attack_pos(Position.new(9,8))
-test.attack_pos(Position.new(10,8))
-test.num_successful_attacks
-test.all_sunk?
-puts test.to_s
+# test = GameBoard.new(10, 10)
+# position1 = Position.new(4, 10)
+# position2 = Position.new(8, 8)
+# position3 = Position.new(4, 2)
+# position4 = Position.new(8, 2)
+# ship1 = Ship.new(position1, "Left", 8)
+# ship2 = Ship.new(position2, "Down", 3)
+# ship3 = Ship.new(position3, "Up", 4)
+# ship4 = Ship.new(position4, "Right", 4)
+# test.add_ship(ship1)
+# test.add_ship(ship2)
+# test.add_ship(ship3)
+# test.add_ship(ship4)
+# test.attack_pos(position2)
+# test.attack_pos(Position.new(9,8))
+# test.attack_pos(Position.new(10,8))
+# test.num_successful_attacks
+# test.all_sunk?
+# puts test.to_s
