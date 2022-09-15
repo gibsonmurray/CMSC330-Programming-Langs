@@ -138,9 +138,9 @@ class GameBoard
                 spaces.call
             end
             for col in 0..@max_column
-                if row == 0 && col < 10
+                if row == 0 && col < @max_column
                     print (col + 1).to_s                    # prints column number
-                    if col < 10 
+                    if col < @max_column 
                         spaces.call
                     end
                 else
@@ -166,27 +166,31 @@ class GameBoard
                     end
                 end
             end
-            puts "\n"
+            if row < @max_row
+                puts "\n"
+            end
         end
+        nil
     end
 end
 
 # Tests
 test = GameBoard.new(10, 10)
-# position1 = Position.new(4, 10)
+position1 = Position.new(4, 10)
 position2 = Position.new(8, 8)
-# position3 = Position.new(4, 2)
-# position4 = Position.new(8, 2)
-# ship1 = Ship.new(position1, "Left", 8)
+position3 = Position.new(4, 2)
+position4 = Position.new(8, 2)
+ship1 = Ship.new(position1, "Left", 8)
 ship2 = Ship.new(position2, "Down", 3)
-# ship3 = Ship.new(position3, "Up", 4)
-# ship4 = Ship.new(position4, "Right", 4)
-# puts test.add_ship(ship1)
-puts test.add_ship(ship2)
-# puts test.add_ship(ship3)
-# puts test.add_ship(ship4)
-puts test.attack_pos(position2)
+ship3 = Ship.new(position3, "Up", 4)
+ship4 = Ship.new(position4, "Right", 4)
+test.add_ship(ship1)
+test.add_ship(ship2)
+test.add_ship(ship3)
+test.add_ship(ship4)
+test.attack_pos(position2)
 test.attack_pos(Position.new(9,8))
 test.attack_pos(Position.new(10,8))
-puts test.num_successful_attacks
-puts test.all_sunk?
+test.num_successful_attacks
+test.all_sunk?
+puts test.to_s
