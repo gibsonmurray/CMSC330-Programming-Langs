@@ -86,19 +86,33 @@ class GameBoard
     # return Boolean on whether attack was successful or not (hit a ship?)
     # return nil if Position is invalid (out of the boundary defined)
     def attack_pos(position)
+        hit = false
         # check position
         if position.row > 10 && position.row < 1 && position.column > 10 && position.column < 1
             return nil
         end
         # update your grid
-
+        row = position.row - 1
+        col = position.column - 1
+        @grid[row][col][1] = true
         # return whether the attack was successful or not
-        true
+        if @grid[row][col][0]
+            hit = true
+        end
+        hit
     end
 
     # Number of successful attacks made by the "opponent" on this player GameBoard
     def num_successful_attacks
-        0
+        ans = 0
+        for row in 0..@grid.length - 1
+            for col in 0..@grid.length - 1
+                if @grid[row][col][0] && @grid[row][col][1]
+                    ans += 1
+                end
+            end
+        end
+        ans
     end
 
     # returns Boolean
@@ -170,4 +184,6 @@ puts test.add_ship(ship1)
 puts test.add_ship(ship2)
 puts test.add_ship(ship3)
 puts test.add_ship(ship4)
+puts test.attack_pos(position1)
+puts test.num_successful_attacks
 puts test
