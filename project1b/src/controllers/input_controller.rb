@@ -6,7 +6,22 @@ require_relative '../models/position'
 # Return nil on any error (validation error or file opening error)
 # If 5 valid ships added, return GameBoard; return nil otherwise
 def read_ships_file(path)
-    GameBoard.new 10, 10
+    if !read_file_lines(path)
+        return nil
+    end
+    five_ships = 0
+    ans = GameBoard.new(10, 10)
+    read_file_lines(path) do |line|
+        if line =~ /\(\d+,\d+\), (Right|Left|Up|Down), \d+/ && five_ships < 5
+            point = line.match(/\d+,\d+/).split(',', 2) # solve split error
+            direction = line.match(/(Right|Left|Up|Down)/)
+            size = line.match(/ \d+/).strip.to_i
+            position = Position.new(point[0].to_i, point[1].to_i)
+            ship = Ship.new(position, direction, size)
+            ans.add_ship(ship) ? five_ships += 1 : false
+        end
+    end
+    five_ships == 5 ? ans : nil
 end
 
 
