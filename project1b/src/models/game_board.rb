@@ -186,3 +186,10 @@ end
 # test.num_successful_attacks
 # test.all_sunk?
 # puts test.to_s
+
+# position = Position.new(2,2)
+# ship1 = Ship.new(position, "Right", 3)
+# ship2 = Ship.new(position, "Right", 2)
+# puts test.add_ship(ship1)
+# puts test.add_ship(ship2)
+# puts test
