@@ -114,8 +114,6 @@ class GameBoard
     # returns True if all the ships are sunk.
     # Return false if at least one ship hasn't sunk.
     def all_sunk?
-        puts @num_hit.to_s
-        puts @total_sizes.to_s
         @num_hit == @total_sizes ? true : false
     end
 

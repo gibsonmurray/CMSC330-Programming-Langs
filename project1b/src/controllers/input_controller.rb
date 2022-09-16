@@ -13,22 +13,38 @@ def read_ships_file(path)
     ans = GameBoard.new(10, 10)
     read_file_lines(path) do |line|
         if line =~ /\(\d+,\d+\), (Right|Left|Up|Down), \d+/ && five_ships < 5
-            point = line.match(/\d+,\d+/).to_s.split(',', 2) # solve split error
+            point = line.match(/\d+,\d+/).to_s.split(',', 2)
             direction = line.match(/(Right|Left|Up|Down)/)
             size = line.match(/ \d+/).to_s.strip.to_i
             position = Position.new(point[0].to_i, point[1].to_i)
             ship = Ship.new(position, direction, size)
             ans.add_ship(ship) ? five_ships += 1 : false
         end
+        if five_ships == 5
+            return ans
+        end
     end
-    five_ships == 5 ? ans : nil
+    if five_ships < 5
+        return nil
+    end
 end
 
 
 # return Array of Position or nil
 # Returns nil on file open error
 def read_attacks_file(path)
-    [Position.new(1, 1)]
+    if !read_file_lines(path)
+        return nil
+    end
+    ans = []
+    read_file_lines(path) do |line|
+        if line =~ /^\(\d+,\d+\)$/
+            point = line.match(/\d+,\d+/).to_s.split(',', 2)
+            position = Position.new(point[0].to_i, point[1].to_i)
+            ans << position
+        end
+    end
+    ans
 end
 
 
