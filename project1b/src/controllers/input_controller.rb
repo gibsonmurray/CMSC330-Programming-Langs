@@ -38,7 +38,11 @@ def read_attacks_file(path)
     end
     ans = []
     read_file_lines(path) do |line|
+<<<<<<< HEAD
         if line =~ /\(\d+,\d+\)\n/
+=======
+        if line.strip =~ /^\(\d+,\d+\)$/
+>>>>>>> 8917bfc9846eccb67c5371cdbc934b1b314e4c6b
             point = line.match(/\d+,\d+/).to_s.split(',', 2)
             puts point
             position = Position.new(point[0].to_i, point[1].to_i)
