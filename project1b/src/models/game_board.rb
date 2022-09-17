@@ -1,5 +1,5 @@
-require_relative 'position'
-require_relative 'ship'
+require_relative '../models/ship'
+require_relative '../models/position'
 
 class GameBoard
     # @max_row is an `Integer`

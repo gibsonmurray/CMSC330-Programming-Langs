@@ -137,4 +137,3 @@ class PublicTests < MiniTest::Test
         refute(read_ships_file(BAD_SHIPS), "#{BAD_SHIPS} Should Not read correctly")
     end
 end
-

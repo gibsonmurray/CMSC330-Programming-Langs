@@ -12,12 +12,9 @@ def read_ships_file(path)
     five_ships = 0
     ans = GameBoard.new(10, 10)
     read_file_lines(path) do |line|
-        if line =~ /\(\d+,\d+\), (Right|Left|Up|Down), \d+/ && five_ships < 5
-            point = line.match(/\d+,\d+/).to_s.split(',', 2)
-            direction = line.match(/(Right|Left|Up|Down)/).to_s
-            size = line.match(/ \d+/).to_s.strip.to_i
-            position = Position.new(point[0].to_i, point[1].to_i)
-            ship = Ship.new(position, direction, size)
+        if (line =~ /^\((\d+),(\d+)\), (Right|Left|Up|Down), (\d+)$/) == 0 && five_ships < 5
+            position = Position.new($1.to_i, $2.to_i)
+            ship = Ship.new(position, $3.to_s, $4.to_i)
             if ans.add_ship(ship)
                 five_ships += 1
             end
@@ -38,14 +35,8 @@ def read_attacks_file(path)
     end
     ans = []
     read_file_lines(path) do |line|
-<<<<<<< HEAD
-        if line =~ /\(\d+,\d+\)\n/
-=======
-        if line.strip =~ /^\(\d+,\d+\)$/
->>>>>>> 8917bfc9846eccb67c5371cdbc934b1b314e4c6b
-            point = line.match(/\d+,\d+/).to_s.split(',', 2)
-            puts point
-            position = Position.new(point[0].to_i, point[1].to_i)
+        if line =~ /^\(\d+,\d+\)$/
+            position = Position.new($1.to_i, $2.to_i)
             ans << position
         end
     end
