@@ -35,7 +35,7 @@ def read_attacks_file(path)
     end
     ans = []
     read_file_lines(path) do |line|
-        if line =~ /^\(\d+,\d+\)$/
+        if (line =~ /^\((\d+),(\d+)\)$/) == 0
             position = Position.new($1.to_i, $2.to_i)
             ans << position
         end
