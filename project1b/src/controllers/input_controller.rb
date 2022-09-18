@@ -12,7 +12,7 @@ def read_ships_file(path)
     five_ships = 0
     ans = GameBoard.new(10, 10)
     read_file_lines(path) do |line|
-        if (line =~ /^\((\d+),(\d+)\), (Right|Left|Up|Down), (\d+)$/) == 0 && five_ships < 5
+        if ((line =~ /^\((\d+),(\d+)\), (Right|Left|Up|Down), (\d+)$/) == 0) && (five_ships < 5)
             position = Position.new($1.to_i, $2.to_i)
             ship = Ship.new(position, $3.to_s, $4.to_i)
             if ans.add_ship(ship)
@@ -30,7 +30,7 @@ end
 # return Array of Position or nil
 # Returns nil on file open error
 def read_attacks_file(path)
-    if (File.exists? path) == false
+    if (File.exists?(path)) == false
         return nil
     end
     ans = []
