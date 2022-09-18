@@ -6,7 +6,7 @@ require_relative '../models/position'
 # Return nil on any error (validation error or file opening error)
 # If 5 valid ships added, return GameBoard; return nil otherwise
 def read_ships_file(path)
-    if !read_file_lines(path)
+    if (File.exists? path) == false
         return nil
     end
     five_ships = 0
@@ -30,7 +30,7 @@ end
 # return Array of Position or nil
 # Returns nil on file open error
 def read_attacks_file(path)
-    if !read_file_lines(path)
+    if (File.exists? path) == false
         return nil
     end
     ans = []
