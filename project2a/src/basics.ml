@@ -2,11 +2,15 @@
 (* Part 1: Non-Recursive Functions *)
 (***********************************)
 
-let rev_tup tup = failwith "unimplemented"
+let rev_tup tup = 
+  match tup with
+  | (a, b, c) -> (c, b, a);;
 
-let is_odd x = failwith "unimplemented"
+let is_odd x = if x mod 2 = 1 then true else false;;
 
-let area x y = failwith "unimplemented"
+let area x y = 
+  match x y with
+  |(a, b) 
 
 let volume x y = failwith "unimplemented"
 
