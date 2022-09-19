@@ -17,7 +17,11 @@ let volume x y = match x, y with
 (* Part 2: Recursive Functions *)
 (*******************************)
 
-let rec fibonacci n = failwith "unimplemented"
+let rec fibonacci n = 
+  if n = 0 then 0 else if n = 1 then 1 else
+    let x = fibonacci (n - 1) in
+    let y = fibonacci (n - 2) in
+     x + y;;
 
 let rec pow x y = failwith "unimplemented"
 
