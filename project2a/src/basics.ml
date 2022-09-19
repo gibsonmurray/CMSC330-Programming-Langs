@@ -18,14 +18,11 @@ let volume x y = match x, y with
 (*******************************)
 
 let rec fibonacci n = 
-  if n = 0 then 0 else if n = 1 then 1 else
-    let x = fibonacci (n - 1) in
-    let y = fibonacci (n - 2) in
-     x + y;;
+  if n = 0 then 0 else if n = 1 then 1 else fibonacci (n - 1) + fibonacci (n - 2);;
 
-let rec pow x y = failwith "unimplemented"
+let rec pow x y = if y = 0 then 1 else x * pow x (y - 1);;
 
-let rec log x y = failwith "unimplemented"
+let rec log x y = if y = 1 then 0 else 1 + log x (y / x);;
 
 let rec gcf x y = failwith "unimplemented"
 
