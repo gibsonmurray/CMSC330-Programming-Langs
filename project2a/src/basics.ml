@@ -7,10 +7,11 @@ let rev_tup tup = match tup with
 
 let is_odd x = if x mod 2 = 1 then true else false;;
 
-let area x y = match tup with
+let area x y = match x, y with
   | (a, b), (p, q) -> (abs(a-p) * abs(b - q));;
 
-let volume x y = failwith "unimplemented"
+let volume x y = match x, y with
+  | (a, b, c), (p, q, r) -> (abs(a - p) * abs(b - q) * abs(c - r));;
 
 (*******************************)
 (* Part 2: Recursive Functions *)
