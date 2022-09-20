@@ -24,7 +24,12 @@ let rec pow x y = if y = 0 then 1 else x * pow x (y - 1);;
 
 let rec log x y = if y = 1 then 0 else 1 + log x (y / x);;
 
-let rec gcf x y = failwith "unimplemented"
+(* Helper Function *)
+let rec gcf_aux x y n = 
+  if (x mod n) = (y mod n) then n else gcf_aux x y (n - 1);;
+
+let gcf x y =
+  if x > y then gcf_aux x y y else gcf_aux x y x;;
 
 let rec is_prime x = failwith "unimplemented"
 
