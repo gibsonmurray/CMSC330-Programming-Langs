@@ -31,7 +31,11 @@ let rec gcf_aux x y n =
 let gcf x y =
   if x > y then gcf_aux x y y else gcf_aux x y x;;
 
-let rec is_prime x = failwith "unimplemented"
+let rec is_prime_aux x n =  (* fix *)
+  if x = 1 then true else
+  if x mod n = 0 then false else is_prime_aux x (n - 1);;
+
+let is_prime x = if x < 0 || x = 1 then false else is_prime_aux x (x - 1);;
 
 (*****************)
 (* Part 3: Lists *)
