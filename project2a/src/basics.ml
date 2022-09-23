@@ -56,9 +56,12 @@ let rec larger lst1 lst2 =
                     if t = [] && tt != [] then lst2 else
                     larger t tt;;
 
-let reverse lst = 
+let rec reverse_aux lst rev = 
   match lst with
-  |
+  | [] -> rev
+  | h::t -> reverse_aux lst (h @ rev);;
+
+let reverse lst = let rev = [] in reverse_aux lst rev;;
 
 let rec combine lst1 lst2 = failwith "unimplemented"
 
