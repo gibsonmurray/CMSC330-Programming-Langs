@@ -59,9 +59,9 @@ let rec larger lst1 lst2 =
 let rec reverse_aux lst rev = 
   match lst with
   | [] -> rev
-  | h::t -> reverse_aux lst (h @ rev);;
+  | h::t -> reverse_aux t (h::rev);;
 
-let reverse lst = let rev = [] in reverse_aux lst rev;;
+let reverse lst = reverse_aux lst [];;
 
 let rec combine lst1 lst2 = failwith "unimplemented"
 
