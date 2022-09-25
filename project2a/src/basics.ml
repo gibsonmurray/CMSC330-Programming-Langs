@@ -70,5 +70,3 @@ let rec merge lst1 lst2 = failwith "unimplemented"
 let rec rotate shift lst = failwith "unimplemented"
 
 let rec is_palindrome lst = failwith "unimplemented"
-
-(* Testing update*)
