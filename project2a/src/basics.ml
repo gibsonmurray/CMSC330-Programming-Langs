@@ -63,7 +63,13 @@ let rec reverse_aux lst rev =
 
 let reverse lst = reverse_aux lst [];;
 
-let rec combine lst1 lst2 = failwith "unimplemented"
+let rec combine lst1 lst2 =
+  match lst1, lst2 with
+  | [], [] -> []
+  | h::t, [] -> lst1
+  | [], h::t -> lst2
+  | h::t, _ -> h::(combine lst2 t);;
+
 
 let rec merge lst1 lst2 = failwith "unimplemented"
 
