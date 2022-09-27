@@ -32,7 +32,8 @@ let rec log x y = if x > y then 0 else 1 + log x (y / x);;
 let rec gcf_aux x y n = 
   if (x mod n) = (y mod n) then n else gcf_aux x y (n - 1);;
 
-let gcf x y =
+let gcf x y = if x = 0 && y = 0 then 0 else
+  if x = 0 && y != 0 then y else if x = 0 && y != 0 then x else
   if x > y then gcf_aux x y y else gcf_aux x y x;;
   
 (* Helper Function *)
@@ -51,14 +52,16 @@ let rec get idx lst =
   | [] -> failwith "Out of bounds"
   | h::rest -> if idx = 0 then h else get (idx - 1) rest;;
 
+let rec length lst= 
+  match lst with
+  | [] -> 0
+  | h::t -> 1 + length(t);;
+  
 let rec larger lst1 lst2 = 
-  match lst1, lst2 with
-  | [], [] -> []
-  | _, [] -> lst1
-  | [], _ -> lst2
-  | h::t, hh::tt -> if t != [] && tt = [] then lst1 else 
-                    if t = [] && tt != [] then lst2 else
-                    larger t tt;;
+  if length lst1 > length lst2
+    then lst1 else
+      if length lst1 < length lst2
+        then lst2 else [];;
 
 let rec reverse_aux lst rev = 
   match lst with
@@ -70,9 +73,9 @@ let reverse lst = reverse_aux lst [];;
 let rec combine lst1 lst2 =
   match lst1, lst2 with
   | [], [] -> []
-  | h::t, [] -> lst1
-  | [], h::t -> lst2
-  | h::t, _ -> h::(combine lst2 t);;
+  | _, [] -> lst1
+  | [], _ -> lst2
+  | h::t, _ -> h::(combine t lst2);;
 
 let rec merge lst1 lst2 = 
   match lst1, lst2 with
