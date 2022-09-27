@@ -80,6 +80,17 @@ let rec merge lst1 lst2 =
       then h::(merge t (m::n))
       else m::(merge (h::t) n);;
 
-let rec rotate shift lst = failwith "unimplemented"
+let rec rotate shift lst = 
+  if shift = 0 then lst else
+    match lst with
+    | [] -> []
+    | h::t -> rotate (shift - 1) (t @ [h]);;
 
-let rec is_palindrome lst = failwith "unimplemented"
+let rec is_pal_aux lst rev = 
+    match lst, rev with
+    | [], [] -> true
+    | _, [] -> true
+    | [], _ -> true
+    | h::t, m::n -> if h = m then is_pal_aux t n else false;;
+
+let is_palindrome lst = is_pal_aux lst (reverse lst);;
