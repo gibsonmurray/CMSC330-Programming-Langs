@@ -5,7 +5,11 @@
 let rev_tup tup = match tup with
   | (a, b, c) -> (c, b, a);;
 
-let is_odd x = if x mod 2 = 1 then true else false;;
+let is_odd_helper x = 
+  if x mod 2 = 1 then true else false;;
+
+let is_odd x = 
+  if x < 0 then let x = (x * (-1)) in is_odd_helper x else is_odd_helper x;;
 
 let area x y = match x, y with
   | (a, b), (p, q) -> (abs(a-p) * abs(b - q));;
@@ -22,7 +26,7 @@ let rec fibonacci n =
 
 let rec pow x y = if y = 0 then 1 else x * pow x (y - 1);;
 
-let rec log x y = if y = 1 then 0 else 1 + log x (y / x);;
+let rec log x y = if x > y then 0 else 1 + log x (y / x);;
 
 (* Helper Function *)
 let rec gcf_aux x y n = 
