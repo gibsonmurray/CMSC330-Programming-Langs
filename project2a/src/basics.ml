@@ -70,8 +70,15 @@ let rec combine lst1 lst2 =
   | [], h::t -> lst2
   | h::t, _ -> h::(combine lst2 t);;
 
-
-let rec merge lst1 lst2 = failwith "unimplemented"
+let rec merge lst1 lst2 = 
+  match lst1, lst2 with
+  | [], [] -> []
+  | _, [] -> lst1
+  | [], _ -> lst2
+  | h::t, m::n -> 
+    if h < m 
+      then h::(merge t (m::n))
+      else m::(merge (h::t) n);;
 
 let rec rotate shift lst = failwith "unimplemented"
 
