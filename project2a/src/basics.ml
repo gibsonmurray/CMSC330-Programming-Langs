@@ -21,20 +21,18 @@ let volume x y = match x, y with
 (* Part 2: Recursive Functions *)
 (*******************************)
 
-let rec fibonacci n = 
-  if n = 0 then 0 else if n = 1 then 1 else fibonacci (n - 1) + fibonacci (n - 2);;
+let rec fib n acc b = 
+  if n = 0 then acc else fib (n - 1) (acc + b) acc;;
+
+let rec fibonacci n = fib n 0 1;;
 
 let rec pow x y = if y = 0 then 1 else x * pow x (y - 1);;
 
 let rec log x y = if x > y then 0 else 1 + log x (y / x);;
 
-(* Helper Function *)
-let rec gcf_aux x y n = 
-  if (x mod n) = (y mod n) then n else gcf_aux x y (n - 1);;
-
-let gcf x y = if x = 0 && y = 0 then 0 else
-  if x = 0 && y != 0 then y else if x = 0 && y != 0 then x else
-  if x > y then gcf_aux x y y else gcf_aux x y x;;
+let rec gcf x y = 
+  if x = 0 && y != 0 then y else if x != 0 && y = 0 then x else
+  if x = y then x else if x > y then gcf (x - y) y else gcf x (y - x);;
   
 (* Helper Function *)
 let rec is_prime_aux x n = 
