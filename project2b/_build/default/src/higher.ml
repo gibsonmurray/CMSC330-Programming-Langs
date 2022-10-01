@@ -4,7 +4,7 @@ open Funs
 (* Part 1: High Order Functions *)
 (********************************)
 
-let contains_elem lst e = failwith "unimplemented"
+let contains_elem lst e = failwith "unimplemented" (*fold (fun e h -> if e = h then true else false) e lst;;*)
 
 let is_present lst x = failwith "unimplemented"
 
