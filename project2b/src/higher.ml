@@ -4,12 +4,9 @@ open Funs
 (* Part 1: High Order Functions *)
 (********************************)
 
-let contains_elem lst e = 
-  if (fold (fun a x -> if e = x then a + 1 else a) 0 lst) > 0
-  then true else false;;
+let contains_elem lst e = fold (fun a x -> a || x = e) false lst;;
 
-let is_present lst x = 
-  map (fun e -> if x = e then 1 else 0) lst;;
+let is_present lst x = map (fun e -> if x = e then 1 else 0) lst;;
 
 let count_occ lst target = failwith "unimplemented"
 
