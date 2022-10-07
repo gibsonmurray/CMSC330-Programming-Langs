@@ -16,14 +16,14 @@ let rec int_insert x t =
   | IntLeaf -> IntNode(x, None, IntLeaf, IntLeaf, IntLeaf)
   (* Case 2: only left int is filled *)
   | IntNode(lv, None, left, middle, right) ->
-    if x < lv then IntNode(x, Some lv, left, middle, right) else
+    if x < lv then int_insert x left else
       if x > lv then IntNode(lv, Some x, left, middle, right) else
         IntNode(lv, None, left, middle, right)
   (* Case 3: both ints are filled *)
   | IntNode(lv, Some rv, left, middle, right) ->
-    if x < lv then IntNode(lv, Some rv, int_insert x left, middle, right) else
-      if x > rv then IntNode(lv, Some rv, left, middle, int_insert x right) else
-        if x > lv && x < rv then IntNode(lv, Some rv, left, int_insert x middle, right) else
+    if x < lv then int_insert x left else
+      if x > rv then int_insert x right else
+        if x > lv && x < rv then int_insert x middle else
           IntNode(lv, Some rv, left, middle, right);;
 
 let rec int_mem x t =

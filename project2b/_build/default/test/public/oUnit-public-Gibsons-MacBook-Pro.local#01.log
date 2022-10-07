@@ -1,0 +1,33 @@
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:0:is_elem.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Test public:0:is_elem is successful.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:0:is_elem.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:3:uniq.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Test public:3:uniq is successful.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:3:uniq.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:5:ap.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Test public:5:ap is successful.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:5:ap.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:7:int_tree_insert_and_mem.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Test public:7:int_tree_insert_and_mem exited with an error.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Failure("unimplemented") in test public:7:int_tree_insert_and_mem.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Raised at Stdlib.failwith in file "stdlib.ml", line 29, characters 17-33
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from Dune__exe__Public.public_int_tree_insert_and_mem in file "test/public/public.ml", line 95, characters 44-62
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from OUnitRunner.run_one_test.(fun) in file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: 
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:7:int_tree_insert_and_mem.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:9:tree_map_put_and_get.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Test public:9:tree_map_put_and_get exited with an error.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Failure("unimplemented") in test public:9:tree_map_put_and_get.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Raised at Stdlib.failwith in file "stdlib.ml", line 29, characters 17-33
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from Dune__exe__Public.public_tree_map_put_and_get in file "test/public/public.ml", line 123, characters 11-27
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from OUnitRunner.run_one_test.(fun) in file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: 
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:9:tree_map_put_and_get.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: Start test public:11:scopes.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Test public:11:scopes exited with an error.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Failure("unimplemented") in test public:11:scopes.
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Raised at Stdlib.failwith in file "stdlib.ml", line 29, characters 17-33
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from Dune__exe__Public.public_scopes in file "test/public/public.ml", line 143, characters 10-32
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: Called from OUnitRunner.run_one_test.(fun) in file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 E: 
+2022-10-07T19:18:46+00:00 Gibsons-MacBook-Pro.local#01 I: End test public:11:scopes.
