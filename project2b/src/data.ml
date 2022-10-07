@@ -27,13 +27,27 @@ let rec int_insert x t =
           IntNode(lv, Some rv, left, middle, right);;
 
 let rec int_mem x t =
-  failwith "unimplemented"
+  match t with
+  | IntLeaf -> false
+  | IntNode(lv, None, left, middle, right) -> if x = lv then true else false
+  | IntNode(lv, Some rv, left, middle, right) -> 
+    if x = lv || x = rv then true else 
+      if x < lv then int_mem x left else
+        if x > rv then int_mem x right else
+          int_mem x middle;;
 
 let rec int_size t =
-  failwith "unimplemented"
+  match t with
+  | IntLeaf -> 0
+  | IntNode(lv, None, left, middle, right) -> 1
+  | IntNode(lv, Some rv, left, middle, right) -> 2 + int_size left + int_size middle + int_size right;;
 
 let rec int_max t =
-  failwith "unimplemented"
+  match t with
+  | IntLeaf -> 0
+  | IntNode(lv, None, left, middle, right) -> lv
+  | IntNode(lv, Some rv, left, middle, right) -> 
+    if right = IntLeaf then rv else int_max right;;
 
 (*******************************)
 (* Part 3: Three-Way Search Tree-Based Map *)
