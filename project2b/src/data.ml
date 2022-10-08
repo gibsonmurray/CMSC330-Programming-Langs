@@ -101,18 +101,42 @@ let rec map_get k t =
 (***************************)
 
 (* Modify the next line to your intended type *)
-type lookup_table = unit
+type variable = { k:string; v:int; }
 
-let empty_table : lookup_table = ()
+type lookup_table = 
+| Empty
+| Scope of variable list * lookup_table
 
-let push_scope (table : lookup_table) : lookup_table = 
-  failwith "unimplemented"
+let empty_table : lookup_table = Empty
 
-let pop_scope (table : lookup_table) : lookup_table =
-  failwith "unimplemented"
+let rec push_scope (table : lookup_table) : lookup_table = 
+  match table with
+  | Empty -> Scope([], Empty)
+  | Scope(vars, inner) -> Scope(vars, push_scope inner);;
+
+let rec pop_scope (table : lookup_table) : lookup_table =
+  match table with
+  | Empty -> failwith "No scopes remain!"
+  | Scope(vars, inner) -> if inner = empty_table then empty_table else pop_scope inner;;
+
+let rec add_help name value vars = 
+  match vars with
+  | [] -> {k=name; v=value}
+  | h::t -> if h.k = name
+            then failwith "Duplicate variable binding in scope!" 
+            else add_help name value t;;
 
 let add_var name value (table : lookup_table) : lookup_table =
-  failwith "unimplemented"
+  match table with
+  | Empty -> failwith "There are no scopes to add a variable to!"
+  | Scope(vars, inner) -> Scope((add_help name value vars)::vars, inner);;
 
-let rec lookup name (table : lookup_table) =
-  failwith "unimplemented"
+let rec lookup_help name vars = 
+  match vars with
+  | [] -> failwith "Variable not found!"
+  | h::t -> if h.k = name then h.v else lookup_help name t;;
+
+let lookup name (table : lookup_table) =
+  match table with
+  | Empty -> failwith "Variable not found!"
+  | Scope(vars, inner) -> lookup_help name vars;;
