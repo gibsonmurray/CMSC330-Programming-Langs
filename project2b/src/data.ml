@@ -70,7 +70,7 @@ let rec map_put k v t =
   (* Case 3: both nodes are filled *)
   | MapNode((kl, vl), Some (kr, vr), left, middle, right) ->
     if k < kl then MapNode((kl, vl), Some (kr, vr), map_put k v left, middle, right) else
-      if k > kr then MapNode((kl, vr), Some (kr, vr), left, middle, map_put k v right) else
+      if k > kr then MapNode((kl, vl), Some (kr, vr), left, middle, map_put k v right) else
         if k > kl && k < kr then MapNode((kl, vl), Some (kr, vr), left, map_put k v middle, right) else
           raise(Invalid_argument("map_put"));;
 
