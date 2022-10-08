@@ -1,4 +1,3 @@
-open Funs
 
 (*************************************)
 (* Part 2: Three-Way Search Tree *)
@@ -111,13 +110,13 @@ let empty_table : lookup_table = Empty
 
 let rec push_scope (table : lookup_table) : lookup_table = 
   match table with
-  | Empty -> Scope([], Empty)
-  | Scope(vars, inner) -> Scope(vars, push_scope inner);;
+  | Empty -> Scope([], table)
+  | Scope(vars, outer) -> Scope([], Scope(vars, outer));;
 
 let rec pop_scope (table : lookup_table) : lookup_table =
   match table with
   | Empty -> failwith "No scopes remain!"
-  | Scope(vars, inner) -> if inner = empty_table then empty_table else pop_scope inner;;
+  | Scope(vars, outer) -> if outer = empty_table then empty_table else outer;;
 
 let rec add_help name value vars = 
   match vars with
@@ -126,10 +125,10 @@ let rec add_help name value vars =
             then failwith "Duplicate variable binding in scope!" 
             else add_help name value t;;
 
-let add_var name value (table : lookup_table) : lookup_table =
+let rec add_var name value (table : lookup_table) : lookup_table =
   match table with
   | Empty -> failwith "There are no scopes to add a variable to!"
-  | Scope(vars, inner) -> Scope((add_help name value vars)::vars, inner);;
+  | Scope(vars, outer) -> Scope((add_help name value vars)::vars, outer);;
 
 let rec lookup_help name vars = 
   match vars with
@@ -139,4 +138,4 @@ let rec lookup_help name vars =
 let lookup name (table : lookup_table) =
   match table with
   | Empty -> failwith "Variable not found!"
-  | Scope(vars, inner) -> lookup_help name vars;;
+  | Scope(vars, outer) -> lookup_help name vars;;

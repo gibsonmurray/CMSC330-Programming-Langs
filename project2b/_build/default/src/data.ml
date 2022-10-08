@@ -1,4 +1,3 @@
-open Funs
 
 (*************************************)
 (* Part 2: Three-Way Search Tree *)
@@ -101,18 +100,42 @@ let rec map_get k t =
 (***************************)
 
 (* Modify the next line to your intended type *)
-type lookup_table = unit
+type variable = { k:string; v:int; }
 
-let empty_table : lookup_table = ()
+type lookup_table = 
+| Empty
+| Scope of variable list * lookup_table
 
-let push_scope (table : lookup_table) : lookup_table = 
-  failwith "unimplemented"
+let empty_table : lookup_table = Empty
 
-let pop_scope (table : lookup_table) : lookup_table =
-  failwith "unimplemented"
+let rec push_scope (table : lookup_table) : lookup_table = 
+  match table with
+  | Empty -> Scope([], table)
+  | Scope(vars, outer) -> Scope([], Scope(vars, outer));;
 
-let add_var name value (table : lookup_table) : lookup_table =
-  failwith "unimplemented"
+let rec pop_scope (table : lookup_table) : lookup_table =
+  match table with
+  | Empty -> failwith "No scopes remain!"
+  | Scope(vars, outer) -> if outer = empty_table then empty_table else outer;;
 
-let rec lookup name (table : lookup_table) =
-  failwith "unimplemented"
+let rec add_help name value vars = 
+  match vars with
+  | [] -> {k=name; v=value}
+  | h::t -> if h.k = name
+            then failwith "Duplicate variable binding in scope!" 
+            else add_help name value t;;
+
+let rec add_var name value (table : lookup_table) : lookup_table =
+  match table with
+  | Empty -> failwith "There are no scopes to add a variable to!"
+  | Scope(vars, outer) -> Scope((add_help name value vars)::vars, outer);;
+
+let rec lookup_help name vars = 
+  match vars with
+  | [] -> failwith "Variable not found!"
+  | h::t -> if h.k = name then h.v else lookup_help name t;;
+
+let lookup name (table : lookup_table) =
+  match table with
+  | Empty -> failwith "Variable not found!"
+  | Scope(vars, outer) -> lookup_help name vars;;
