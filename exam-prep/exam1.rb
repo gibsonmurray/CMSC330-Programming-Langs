@@ -4,7 +4,8 @@ class CatRecord
         @cats = []
         @months = Array.new(12, 0)
         File.readlines(filename).each do |line|
-            if line =~ /^([A-Z][a-z]+)\, (\d{2}\/\d{2}\/\d{2})\, (Adopted | Available)$/
+            if line.match(/^([A-Z][a-z]+)\, (\d{2}\/\d{2}\/\d{2})\, (Adopted | Available)$/)
+                puts "inside"
                 @cats << [$1, $2, $3]   # Name, Date, Availability
                 month = $2.match(/\/(\d{2})\//).to_s
                 @months[$1.to_i - 1] += 1
@@ -35,3 +36,6 @@ class CatRecord
             end
         end
         return month
+    end
+
+end
