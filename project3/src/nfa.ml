@@ -30,6 +30,7 @@ let explode (s: string) : char list =
 (* Part 1: NFAs *)
 (****************)
 
+
 let rec move_help (d: ('q, 's) transition list) (qs: 'q list) (s: 's option) : 'q list =
   match d with
   | [] -> []
