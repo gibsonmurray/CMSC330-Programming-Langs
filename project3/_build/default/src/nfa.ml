@@ -30,22 +30,11 @@ let explode (s: string) : char list =
 (* Part 1: NFAs *)
 (****************)
 
-let rec move_help (d: ('q, 's) transition list) (qs: 'q list) (s: 's option) : 'q list =
-  match d with
-  | [] -> []
-  | (set, trans, next)::rest -> if (elem set qs && s = trans) then next::(move_help rest qs s) else move_help rest qs s;;
+let move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list =
+  if nfa_t.sigma = [] then 
 
-let move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list = move_help nfa.delta qs s;;
-
-let rec ec_help (d: ('q, 's) transition list) (q: 'q) : 'q list =
-  match d with
-  | [] -> [q]
-  | (set, trans, next)::rest -> if (set = q && trans = None) then set::(ec_help d next) else ec_help rest q;;
-
-let rec e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
-  match qs with
-  | [] -> []
-  | h::t -> union (ec_help nfa.delta h) (e_closure nfa t);;
+let e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
+  failwith "unimplemented"
 
 let accept (nfa: ('q,char) nfa_t) (s: string) : bool =
   failwith "unimplemented"
