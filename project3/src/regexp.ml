@@ -1,5 +1,6 @@
 open List
 open Nfa
+open Sets
 
 (*********)
 (* Types *)
@@ -26,8 +27,49 @@ let fresh =
 (* Part 3: Regular Expressions *)
 (*******************************)
 
-let regexp_to_nfa (regexp: regexp_t) : (int, char) nfa_t =
-  failwith "unimplemented"
+let nfa_final nfa = 
+  match nfa with 
+  | {sigma = s; qs = qss; q0 = init; fs = finals; delta = d} -> List.nth finals 0
+
+
+let rec regexp_to_nfa (regexp: regexp_t) : (int, char) nfa_t = 
+  match regexp with
+  | Empty_String -> (let q = (fresh ()) in {sigma = []; qs = [q]; q0 = q; fs = [q]; delta = [(q, None, q)]})
+  | Char c -> (let q = fresh () in let f = fresh () in {sigma = [c]; qs = [q; f]; q0 = q; fs = [f]; delta = [(q, Some c, f)]})
+  | Union(re1, re2) -> (let q = fresh () in let f = fresh () in 
+                        let nfa1 = (regexp_to_nfa re1) in let nfa2 = (regexp_to_nfa re2) in 
+                        let f1 = nfa_final nfa1 in let f2 = nfa_final nfa2 in 
+                        let new_d = [ (q, None, nfa1.q0); 
+                                      (q, None, nfa2.q0); 
+                                      (f1, None, f);
+                                      (f2, None, f) ] in 
+                        { 
+                          sigma = union nfa1.sigma nfa2.sigma; 
+                          qs = union [q; f] (union nfa1.qs nfa2.qs);
+                          q0 = q;
+                          fs = [f];
+                          delta = union new_d (union nfa1.delta nfa2.delta)
+                        })
+  | Concat(re1, re2) -> let nfa1 = (regexp_to_nfa re1) in let nfa2 = (regexp_to_nfa re2) in 
+                        let f1 = nfa_final nfa1 in 
+                        {
+                          sigma = union nfa1.sigma nfa2.sigma;
+                          qs = union nfa1.qs nfa2.qs;
+                          q0 = nfa1.q0;
+                          fs = nfa2.fs;
+                          delta = (f1, None, nfa2.q0)::(union nfa1.delta nfa2.delta)
+                        }
+  | Star re -> (let q = fresh () in let f = fresh () in 
+                let nfa = (regexp_to_nfa re) in
+                let fin = nfa_final nfa in
+                let new_d = [(q, None, nfa.q0); (q, None, f); (fin, None, f); (f, None, q)] in
+                {
+                  sigma = nfa.sigma;
+                  qs = union [q; f] nfa.qs;
+                  q0 = q;
+                  fs = [f]; 
+                  delta = union new_d nfa.delta
+                });;
 
 (*****************************************************************)
 (* Below this point is parser code that YOU DO NOT NEED TO TOUCH *)

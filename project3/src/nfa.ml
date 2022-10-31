@@ -30,22 +30,25 @@ let explode (s: string) : char list =
 (* Part 1: NFAs *)
 (****************)
 
-let rec move_help (d: ('q, 's) transition list) (qs: 'q list) (s: 's option) : 'q list =
-  match d with
+let rec move_help (delta: ('q, 's) transition list) (q: 'q) (s: 's option) : 'q list =
+  match delta with
   | [] -> []
-  | (state, trans, next)::rest -> if (elem state qs && s = trans) then next::(move_help rest qs s) else move_help rest qs s;;
+  | (state, trans, next)::rest -> if (state = q && trans = s) then [next] else move_help rest q s;;
 
-let move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list = move_help nfa.delta qs s;;
+let rec move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list = 
+  match qs with
+  | [] -> []
+  | q::rest -> union (move_help nfa.delta q s) (move nfa rest s);;
 
-let rec ec_help (d: ('q, 's) transition list) (q: 'q) : 'q list =
-  match d with
+let rec ec_help (delta: ('q, 's) transition list) (q: 'q) : 'q list =
+  match delta with
   | [] -> [q]
-  | (state, trans, next)::rest -> if (state = q && trans = None) then state::(ec_help d next) else ec_help rest q;;
+  | (state, trans, next)::rest -> if (state = q && trans = None) then state::(ec_help delta next) else ec_help rest q;;
 
 let rec e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
   match qs with
   | [] -> []
-  | h::t -> union (ec_help nfa.delta h) (e_closure nfa t);;
+  | q::rest -> union (ec_help nfa.delta q) (e_closure nfa rest);;
 
 let rec accept_help nfa cs qs: bool = 
   match cs with
@@ -62,18 +65,34 @@ let accept (nfa: ('q, char) nfa_t) (s: string) : bool =
 (* Part 2: Subset Construction *)
 (*******************************)
 
-let new_states (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list list =
-  failwith "unimplemented"
+let new_states (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list list = 
+  fold_left (fun a x -> (e_closure nfa (move nfa qs x))::a) [] (map (fun x -> Some x) nfa.sigma);;
 
 let new_trans (nfa: ('q,'s) nfa_t) (qs: 'q list) : ('q list, 's) transition list =
-  failwith "unimplemented"
+  fold_left (fun a x -> (qs, x, (e_closure nfa (move nfa qs x)))::a) [] (map (fun x -> Some x) nfa.sigma);;
 
 let new_finals (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list list =
-  failwith "unimplemented"
+  fold_left (fun a x -> if elem x nfa.fs then [qs] else a) [] qs;;
 
-let rec nfa_to_dfa_step (nfa: ('q,'s) nfa_t) (dfa: ('q list, 's) nfa_t)
-    (work: 'q list list) : ('q list, 's) nfa_t =
-  failwith "unimplemented"
+let rec nfa_to_dfa_step (nfa: ('q,'s) nfa_t) (dfa: ('q list, 's) nfa_t) (* TODO: change the prototype *)
+    (partial: 'q list list) (full: 'q list list): ('q list, 's) nfa_t =
+  match (diff full partial) with
+  | [] -> dfa
+  | q::rest -> (let full = (union full (new_states nfa q)) in
+                (nfa_to_dfa_step nfa { sigma = dfa.sigma;
+                                        qs = full;
+                                        q0 = dfa.q0;
+                                        fs = [];
+                                        delta = (union (new_trans nfa q) dfa.delta)
+                                      } (q::partial) full))
 
 let nfa_to_dfa (nfa: ('q,'s) nfa_t) : ('q list, 's) nfa_t =
-  failwith "unimplemented"
+  (let dfa = (nfa_to_dfa_step nfa {sigma = nfa.sigma; qs = []; q0 = [nfa.q0]; fs = []; delta = []} [] [e_closure nfa [nfa.q0]]) in
+    (match dfa with 
+    { sigma = sigmuh;
+      qs = qss;
+      q0 = initial;
+      fs = finals;
+      delta = trans
+    } -> {sigma = sigmuh; qs = qss; q0 = initial; fs = (intersection (new_finals nfa initial) [nfa.fs]); delta = trans}));; 
+                        (* TODO: may not need intersection ^ above *)
