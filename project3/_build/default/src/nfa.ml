@@ -40,29 +40,30 @@ let rec move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list =
   | [] -> []
   | q::rest -> union (move_help nfa.delta q s) (move nfa rest s);;
 
-let rec ec_help (delta: ('q, 's) transition list) (q: 'q) : 'q list =
-  match delta with
-  | [] -> [q]
-  | (state, trans, next)::rest -> if (state = q && trans = None)
-                                  then state::(union (ec_help rest q) (ec_help delta next)) 
-                                  else ec_help rest q;;
+let rec ec_help nfa qs a : 'q list =
+  match qs with
+  | [] -> a
+  | q::rest ->  let qs_from_e = (move nfa [q] None) in
+                let new_a = (union (q::qs_from_e) a) in
+                if (eq new_a a)
+                then ec_help nfa rest (union qs_from_e a)
+                else ec_help nfa (union qs_from_e rest) new_a;;
 
 let rec e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
+  ec_help nfa qs qs;;
+
+let rec in_fs nfa qs = 
   match qs with
-  | [] -> []
-  | q::rest -> union (ec_help nfa.delta q) (e_closure nfa rest);;
+  | [] -> false
+  | q::rest -> if (elem q nfa.fs) then true else (in_fs nfa rest);;
 
 let rec accept_help nfa cs qs: bool = 
   match cs with
-  | [] -> if (intersection qs nfa.fs) != [] then true else false
-  | c::rest ->  let nexts = (move nfa qs (Some c)) in
-                if e_closure nfa nexts != []
-                then accept_help nfa rest (e_closure nfa nexts)
-                else false;;
+  | [] -> in_fs nfa qs
+  | c::rest ->  accept_help nfa rest (e_closure nfa (move nfa qs (Some c)));;
 
 let accept (nfa: ('q, char) nfa_t) (s: string) : bool =
-  if s = "" then if (intersection (e_closure nfa [nfa.q0]) nfa.fs) != [] then true else false
-  else accept_help nfa (explode s) (e_closure nfa [nfa.q0]);;
+  accept_help nfa (explode s) (e_closure nfa [nfa.q0]);;
 
 (*******************************)
 (* Part 2: Subset Construction *)
@@ -75,32 +76,24 @@ let new_trans (nfa: ('q,'s) nfa_t) (qs: 'q list) : ('q list, 's) transition list
   fold_left (fun a x -> (qs, x, (e_closure nfa (move nfa qs x)))::a) [] (map (fun x -> Some x) nfa.sigma);;
 
 let new_finals (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list list =
-  fold_left (fun a x -> if elem x nfa.fs then [qs] else a) [] qs;;
+  if (in_fs nfa qs) then [qs] else [];;
 
-let rec nfa_to_dfa_step (nfa: ('q,'s) nfa_t) (dfa: ('q list, 's) nfa_t)
-    (work: 'q list list) : ('q list, 's) nfa_t =
-  match work with
-  | [] -> dfa
-  | q::rest ->  match dfa with
-                | {sigma = sigmuh; qs = qss; q0 = initial; fs = finals; delta = trans} ->
-                  (let new_qs = (new_states nfa q) in
-                  let new_dfa = { 
-                                  sigma = sigmuh; 
-                                  qs = union new_qs qss; 
-                                  q0 = initial;
-                                  fs = union (new_finals nfa q) finals;
-                                  delta = union (new_trans nfa q) trans;
-                                } in
-                  nfa_to_dfa_step nfa new_dfa (diff (union new_qs work) [q]));;
+let rec nfa_to_dfa_step nfa dfa marked_qs =
+  match marked_qs with
+  | [] -> (let final_qs = (fold_left (fun a x -> a @ (new_finals nfa x)) [] dfa.qs) in
+            {sigma = dfa.sigma; qs = dfa.qs; q0 = dfa.q0; fs = final_qs; delta = dfa.delta})
+  | q::rest -> (let new_qs = (new_states nfa q) in
+                let new_marked_qs = if (subset new_qs dfa.qs) then rest else (union new_qs rest) in
+                nfa_to_dfa_step nfa
+                { sigma = dfa.sigma; 
+                  qs = (union dfa.qs new_marked_qs); 
+                  q0 = dfa.q0; 
+                  fs = dfa.fs; 
+                  delta = (union dfa.delta (new_trans nfa q))} new_marked_qs);;
 
 let nfa_to_dfa (nfa: ('q,'s) nfa_t) : ('q list, 's) nfa_t =
-  let initial = e_closure nfa [nfa.q0] in
+  let r0 = (e_closure nfa [nfa.q0]) in
   nfa_to_dfa_step nfa 
-  {
-    sigma = nfa.sigma;
-    qs = [initial]; 
-    q0 = initial; 
-    fs = (new_finals nfa [nfa.q0]); 
-    delta = []
-  } 
-  [e_closure nfa [nfa.q0]];;
+  {sigma = nfa.sigma; qs = [r0]; q0 = r0; fs = (new_finals nfa r0); delta = []}
+  [r0];;
+
