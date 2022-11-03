@@ -40,17 +40,15 @@ let rec move (nfa: ('q,'s) nfa_t) (qs: 'q list) (s: 's option) : 'q list =
   | [] -> []
   | q::rest -> union (move_help nfa.delta q s) (move nfa rest s);;
 
-let rec ec_help nfa qs a : 'q list =
-  match qs with
-  | [] -> a
-  | q::rest ->  let qs_from_e = (move nfa [q] None) in
-                let new_a = (union (q::qs_from_e) a) in
-                if (eq new_a a)
-                then ec_help nfa rest (union qs_from_e a)
-                else ec_help nfa (union qs_from_e rest) new_a;;
+  let rec ec_help nfa qs a =
+    match qs with
+    | [] -> a
+    | q::rest ->  let qs = (move nfa qs None) in
+                  ec_help nfa (diff qs a) (insert_all qs a);;
 
-let rec e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
-  ec_help nfa qs qs;;
+  let e_closure (nfa: ('q,'s) nfa_t) (qs: 'q list) : 'q list =
+    let states = (move nfa qs None) in
+    union qs (ec_help nfa states states);;
 
 let rec in_fs nfa qs = 
   match qs with
