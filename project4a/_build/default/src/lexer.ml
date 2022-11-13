@@ -48,29 +48,30 @@ let tokenize input =
     if pos >= (String.length s) then 
       [] 
     else
-
-      (* symbols/operators *)
         
       (* ints go first because of input *)
       (* positive Tok_Int(int) *)
       if (Str.string_match re_int_pos s pos) then
-        Tok_Int(int_of_string (Str.matched_string s))::(mklst (Str.match_end()) s)
+        let matched = (Str.matched_string s) in
+        Tok_Int(int_of_string matched)::(mklst (Str.match_end()) s)
 
       (* negative Tok_Int(int) *)
       else if (Str.string_match re_int_neg s pos) then
         let matched = (Str.matched_string s) in
         let sub = String.sub matched 1 ((String.length matched) - 2) in
         Tok_Int(int_of_string sub)::(mklst (Str.match_end()) s)
-        (* TODO int of string failure *)
+
+      (* symbols/operators *)
+
       (* "(" *)
       else if (Str.string_match re_lparen s pos) then 
         Tok_LParen::(mklst (Str.match_end()) s)
       (* ")" *)
       else if (Str.string_match re_rparen s pos) then
         Tok_RParen::(mklst (Str.match_end()) s)
-      (* "=" *)
-      else if (Str.string_match re_equal s pos) then
-        Tok_Equal::(mklst (Str.match_end()) s)
+      (* "->" *)
+      else if (Str.string_match re_arrow s pos) then
+        Tok_Arrow::(mklst (Str.match_end()) s)
       (* "<>" *)
       else if (Str.string_match re_noteq s pos) then
         Tok_NotEqual::(mklst (Str.match_end()) s)
@@ -83,6 +84,9 @@ let tokenize input =
       (* ">" *)
       else if (Str.string_match re_greater s pos) then
         Tok_Greater::(mklst (Str.match_end()) s)
+      (* "=" *)
+      else if (Str.string_match re_equal s pos) then
+        Tok_Equal::(mklst (Str.match_end()) s)
       (* "<" *)
       else if (Str.string_match re_less s pos) then
         Tok_Less::(mklst (Str.match_end()) s)
@@ -107,9 +111,6 @@ let tokenize input =
       (* "^" *)
       else if (Str.string_match re_concat s pos) then
         Tok_Concat::(mklst (Str.match_end()) s)
-      (* "->" *)
-      else if (Str.string_match re_arrow s pos) then
-        Tok_Arrow::(mklst (Str.match_end()) s)
       (* ";;" *)
       else if (Str.string_match re_dubsemi s pos) then
         Tok_DoubleSemi::(mklst (Str.match_end()) s)
@@ -202,7 +203,8 @@ let tokenize input =
 
       (* Tok_Bool(bool) *)
       else if (Str.string_match re_bool s pos) then
-        Tok_Bool(bool_of_string (Str.matched_string s))::(mklst (Str.match_end()) s)
+        let matched = (Str.matched_string s) in
+        Tok_Bool(bool_of_string matched)::(mklst (Str.match_end()) s)
 
       (* Tok_String(string) *)
       else if (Str.string_match re_string s pos) then
