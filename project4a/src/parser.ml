@@ -162,4 +162,29 @@ and parse_primary toks =
 
 (* Part 3: Parsing mutop *)
 
-let rec parse_mutop toks = failwith "unimplemented"
+let rec parse_mutop toks = 
+  match toks with
+  | Tok_Def::t -> (parse_def t)
+  | Tok_DoubleSemi::t -> (t, NoOp)
+  | _ -> (parse_mexpr toks)
+
+and parse_def toks = 
+  let (ts1, v1) =
+  (match toks with
+  | Tok_ID(v)::t -> (t, ID(v))
+  | _ -> raise (InvalidInputException("Mutop Error: invalid id")))
+  in
+  let ts2 = (match_token ts1 Tok_Equal) in
+  let (ts3, e1) = (parse_expr ts2) in
+  let ts4 = (match_token ts3 Tok_DoubleSemi) in
+  let value = (match v1 with
+              | ID(x) -> x
+              | _ -> raise (InvalidInputException("Mutop Error: invalid token, should be ID")))
+  in
+  (ts4, Def(value, e1))
+
+and parse_mexpr toks = 
+  let (ts1, e1) = (parse_expr toks) in
+  let ts2 = (match_token ts1 Tok_DoubleSemi) in
+  (ts2, Expr(e1))
+;;

@@ -49,7 +49,7 @@ let tokenize input =
       [] 
     else
         
-      (* ints go first because of input *)
+      (* ints go first because of syntactic logic *)
       (* positive Tok_Int(int) *)
       if (Str.string_match re_int_pos s pos) then
         let matched = (Str.matched_string s) in
@@ -208,7 +208,9 @@ let tokenize input =
 
       (* Tok_String(string) *)
       else if (Str.string_match re_string s pos) then
-        Tok_String((Str.matched_group 1 s))::(mklst (Str.match_end()) s)
+        let matched = (Str.matched_string s) in
+        let sanitized = (Str.matched_group 1 s) in
+        Tok_String(sanitized)::(mklst (pos + (String.length matched)) s)
 
       (* Tok_ID(id) *)
       else if (Str.string_match re_id s pos) then
