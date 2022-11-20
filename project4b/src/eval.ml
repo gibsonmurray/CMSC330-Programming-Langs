@@ -118,22 +118,22 @@ let rec eval_expr env e =
                       if guard then t_branch else f_branch)
 
   | Let(id, r, x1, x2) -> (let v = (if r then
-                                    (let rec_env = (extend_tmp env id) in
-                                    (eval_expr rec_env x1))
-                                  else
-                                    (eval_expr env x1))
+                                      (let rec_env = (extend_tmp env id) in
+                                      (eval_expr rec_env x1))
+                                    else
+                                      (eval_expr env x1))
                           in
                           let new_env = (extend env id v) in
                           (eval_expr new_env x2))
 
   | Fun(param, x1) -> (Closure(env, param, x1))
 
-  | FunctionCall(x1, x2) -> let c = (eval_expr env x1) in
+  | FunctionCall(x1, x2) -> (let c = (eval_expr env x1) in
                             match c with
                             | Closure(a, param, e) -> let v = (eval_expr env x2) in
                                                       let new_env = (extend a param v) in
                                                       (eval_expr new_env e)
-                            | _ -> (raise (TypeError "Not a function"))
+                            | _ -> (raise (TypeError "Not a function")))
 ;;
 
 (* Part 2: Evaluating mutop directive *)
@@ -141,4 +141,18 @@ let rec eval_expr env e =
 (* Evaluates MicroCaml mutop directive [m] in environment [env],
    returning a possibly updated environment paired with
    a value option; throws an exception on error *)
-let eval_mutop env m = failwith "unimplemented"
+let eval_mutop env m = 
+  match m with
+
+  | Def(id, e) ->  (let temp_env = (extend_tmp env id) in
+                  let v = (eval_expr temp_env e) in
+                  let new_env = (extend env id v) in
+                  match v with
+                  | x -> (new_env, (Some x)))
+
+  | Expr(e) ->  (let v = (eval_expr env e) in
+                match v with
+                | x -> (env, (Some x)))
+
+  | NoOp -> (env, None)
+;;
