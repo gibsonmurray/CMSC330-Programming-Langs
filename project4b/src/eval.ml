@@ -113,23 +113,22 @@ let rec eval_expr env e =
                         | And -> (Bool((is_bool v1) && (is_bool v2))))
 
   | If(x1, x2, x3) -> (let guard = (is_bool (eval_expr env x1)) in
-                      let t_branch = (eval_expr env x2) in
-                      let f_branch = (eval_expr env x3) in
-                      if guard then t_branch else f_branch)
+                      if guard then (eval_expr env x2) else (eval_expr env x3))
 
-  | Let(id, r, x1, x2) -> (let v = (if r then
-                                      (let rec_env = (extend_tmp env id) in
-                                      (eval_expr rec_env x1))
-                                    else
-                                      (eval_expr env x1))
-                          in
-                          let new_env = (extend env id v) in
-                          (eval_expr new_env x2))
+  | Let(id, r, x1, x2) -> (if r then
+                            (let new_env = (extend_tmp env id) in
+                            let v = (eval_expr new_env x1) in
+                            (update new_env id v);
+                            (eval_expr new_env x2))
+                          else
+                            (let v = (eval_expr env x1) in
+                            let new_env = (extend env id v) in
+                            (eval_expr new_env x2)))
 
-  | Fun(param, x1) -> (Closure(env, param, x1))
+  | Fun(param, x1) -> Closure(env, param, x1)
 
-  | FunctionCall(x1, x2) -> (let c = (eval_expr env x1) in
-                            match c with
+  | FunctionCall(x1, x2) -> let c = (eval_expr env x1) in
+                            (match c with
                             | Closure(a, param, e) -> let v = (eval_expr env x2) in
                                                       let new_env = (extend a param v) in
                                                       (eval_expr new_env e)
@@ -144,11 +143,11 @@ let rec eval_expr env e =
 let eval_mutop env m = 
   match m with
 
-  | Def(id, e) ->  (let temp_env = (extend_tmp env id) in
-                  let v = (eval_expr temp_env e) in
-                  let new_env = (extend env id v) in
-                  match v with
-                  | x -> (new_env, (Some x)))
+  | Def(id, e) -> (let new_env = (extend_tmp env id) in
+                  let v = (eval_expr new_env e) in
+                  (update new_env id v);
+                  (match v with
+                  | x -> (new_env, (Some x))))
 
   | Expr(e) ->  (let v = (eval_expr env e) in
                 match v with
