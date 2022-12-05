@@ -5,6 +5,7 @@ pub trait PriorityQueue<T: PartialOrd> {
     fn enqueue(&mut self, ele: T) -> ();
     fn dequeue(&mut self) -> Option<T>;
     fn peek(&self) -> Option<&T>;
+    fn minheapify(&mut self) -> ();
 }
 
 /**
@@ -30,19 +31,35 @@ impl<T> PartialEq for Node<T> {
     }
 }
 
-
 /** 
     You must implement the above trait for the vector type 
 **/
 impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
+
+    /** helper function to turn binary tree into a minheap */
+    fn minheapify(&mut self) -> () {
+        for i in 1..self.len() {
+            if self[i] < self[(i - 1) / 2] {
+                let mut j = i;
+                while self[j] < self[(j - 1) / 2] {
+                    self.swap(j, (j - 1) / 2);
+                }
+                j = (j - 1) / 2;
+            }
+        }
+    }
+
+
     /**
         This functions pushes a given element onto the queue and
         reorders the queue such that the min heap property holds.
         See the project specifications for more details on how this
         works.
     **/
+    
     fn enqueue(&mut self, ele: T) -> () {
-        unimplemented!()
+        self.push(ele);
+        self.minheapify();
     }
 
     /**
@@ -53,7 +70,13 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
         Return None if the queue was initially empty, Some(T) otherwise.
     **/
     fn dequeue(&mut self) -> Option<T> {
-        unimplemented!()
+        let n = self.len();
+        self.swap(0, n - 1);
+        let ans = self.pop();
+        if self.len() > 0 {
+            self.minheapify();
+        }
+        return ans;
     }
 
     /**
@@ -64,7 +87,12 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
         otherwise.
     **/
     fn peek(&self) -> Option<&T> {
-        unimplemented!()
+        if self.len() == 0 {
+            None
+        }
+        else {
+            Some(&self[0])
+        }
     }
 }
 
