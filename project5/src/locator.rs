@@ -1,16 +1,22 @@
+use core::panic;
+use std::clone;
 use std::cmp::Ordering;
 use std::collections::HashMap;
+use std::hash::Hash;
 
 pub trait PriorityQueue<T: PartialOrd> {
     fn enqueue(&mut self, ele: T) -> ();
     fn dequeue(&mut self) -> Option<T>;
     fn peek(&self) -> Option<&T>;
-    fn minheapify(&mut self) -> ();
+    fn enqueue_minheapify(&mut self) -> ();
+    fn dequeue_minheapify(&mut self) -> ();
+    fn num_of_children (&self, idx: usize) -> usize;
 }
 
 /**
     An optional definition of a Node struct you may find useful
 **/
+#[derive(Debug)]
 struct Node<T> {
     priority: i32,
     data: T,
@@ -36,19 +42,55 @@ impl<T> PartialEq for Node<T> {
 **/
 impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
 
-    /** helper function to turn binary tree into a minheap */
-    fn minheapify(&mut self) -> () {
-        for i in 1..self.len() {
+    /** helper function for enqueue */
+    fn enqueue_minheapify(&mut self) -> () {
+        let mut i = 1;
+        while i < self.len() {
             if self[i] < self[(i - 1) / 2] {
-                let mut j = i;
-                while self[j] < self[(j - 1) / 2] {
-                    self.swap(j, (j - 1) / 2);
-                }
-                j = (j - 1) / 2;
+                self.swap(i, (i - 1) / 2);
+                i = 1;
+            }
+            else {
+                i += 1;
             }
         }
     }
 
+    fn dequeue_minheapify(&mut self) -> () {
+        let mut i = 0;
+        let mut childs = self.num_of_children(i);
+        while childs > 0 {
+            if childs == 1 && self[i] > self[2 * i + 1] {
+                self.swap(i, 2 * i + 1);
+                i = 2 * i + 1;
+            }
+            else if self[i] > self[2 * i + 1] && self[i] > self[2 * i + 2]{
+                if self[2 * i + 1] < self[2 * i + 2] {
+                    self.swap(i, 2 * i + 1);
+                    i = 2 * i + 1;
+                }
+                else {
+                    self.swap(i, 2 * i + 2);
+                    i = 2 * i + 2;   
+                }
+            }
+            else {
+                break;
+            }
+            childs = self.num_of_children(i);
+        }
+    }
+
+    fn num_of_children (&self, idx: usize) -> usize {
+        let mut ans = 0;
+            if (2 * idx + 1) < self.len() {
+                ans += 1;
+                if (2 * idx + 2) < self.len() {
+                    ans += 1;
+                }
+            }
+        ans
+    }
 
     /**
         This functions pushes a given element onto the queue and
@@ -59,7 +101,7 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
     
     fn enqueue(&mut self, ele: T) -> () {
         self.push(ele);
-        self.minheapify();
+        self.enqueue_minheapify();
     }
 
     /**
@@ -74,7 +116,7 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
         self.swap(0, n - 1);
         let ans = self.pop();
         if self.len() > 0 {
-            self.minheapify();
+            self.dequeue_minheapify();
         }
         return ans;
     }
@@ -104,7 +146,11 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
     details.
 **/
 pub fn distance(p1: (i32,i32), p2: (i32,i32)) -> i32 {
-    unimplemented!()
+    let (a, b) = p1;
+    let (c, d) = p2;
+    let x = c - a;
+    let y = d - b;
+    x.abs() + y.abs()
 }
 
 /**
@@ -117,7 +163,37 @@ pub fn distance(p1: (i32,i32), p2: (i32,i32)) -> i32 {
     for more details on how to choose which enemy.
 **/
 pub fn target_locator<'a>(allies: &'a HashMap<&String, (i32,i32)>, enemies: &'a HashMap<&String, (i32,i32)>) -> (&'a str,i32,i32) {
-    unimplemented!()
+    let mut stark_q = Vec::new();
+    let stark_loc = match allies.get(&String::from("Stark")) {
+        Some(x) => x.clone(),
+        None => panic!("error: stark_loc was None, expected Some(coordinate)")
+    };
+    let mut stark_e_loc = (0, 0);
+    for (e_key, e_value) in enemies.clone() {
+        stark_q.enqueue(Node{ priority: distance(stark_loc, e_value), data: (e_key, e_value) });
+        stark_e_loc = e_value;
+    }
+    for (a_key, a_value) in allies.clone() {
+        let root = match stark_q.peek() {
+            Some(x) => x.clone(),
+            None => panic!("error: root was None, expected Some(Node)")
+        };
+        if (a_key.eq(&String::from("Stark"))) && (distance(a_value, stark_e_loc) < root.priority) {
+            stark_q.dequeue();
+            match stark_q.peek() {
+                Some(x) => match x.data {
+                    (_, pos) => stark_e_loc = pos
+                },
+                None => panic!("error: root was None, expected returning Node")
+            }
+        }
+    }
+    match stark_q.peek() {
+        Some(x) => match x.data {
+            (name, (x, y)) => (name, x, y)
+        },
+        None => panic!("error: rootwas None, expected returning Node")
+    }
 }
 
 

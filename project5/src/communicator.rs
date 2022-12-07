@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 #[derive(Debug)]
 #[derive(PartialEq)]
 pub enum Command
@@ -24,7 +26,18 @@ pub enum Command
 **/
 impl Command {
     pub fn as_str (&self) -> String {
-        unimplemented!()
+        match self {
+            Self::Power(b, i) =>
+                format!("Power {} by {}%", (if *b {"increased"} else {"decreased"}), i),
+            Self::Missiles(b, i ) =>
+                format!("Missiles {} by {}", (if *b {"increased"} else {"decreased"}), i),
+            Self::Shield(b) =>
+                format!("Shield turned {}", (if *b {"on"} else {"off"})),
+            Self::Try =>
+                format!("Call attempt failed"),
+            Self::Invalid =>
+                format!("Not a command")
+        }
     }
 }
 
@@ -41,5 +54,56 @@ impl Command {
     Invalid     |  Anything else
 **/
 pub fn to_command(s: &str) -> Command {
-    unimplemented!()
+    let vec: Vec<&str> = s.split_whitespace().collect();
+    match vec.len() {
+        3 => match vec[0] {
+                "power" => match vec[1] {
+                    "inc" => match vec[2].parse::<i32>() {
+                        Ok(val) => Command::Power(true, val),
+                        Err(_e) => Command::Invalid
+                    }
+                    "dec" => match vec[2].parse::<i32>() {
+                        Ok(val) => Command::Power(false, val),
+                        Err(_e) => Command::Invalid
+                    },
+                    _ => Command::Invalid
+                }
+                _ => match vec[2] {
+                    "missiles" => match vec[0] {
+                        "add" => match vec[1].parse::<i32>() {
+                            Ok(val) => Command::Missiles(true, val),
+                            Err(_e) => Command::Invalid
+                        },
+                        "fire" => match vec[1].parse::<i32>() {
+                            Ok(val) => Command::Missiles(false, val),
+                            Err(_e) => Command::Invalid
+                        },
+                        _ => Command::Invalid
+                    },
+                    _ => Command::Invalid
+                }
+            }
+        2 => match vec[0] {
+            "shield" => match vec[1] {
+                "on" => Command::Shield(true),
+                "off" => Command::Shield(false),
+                _ => Command::Invalid
+            },
+            _ => Command::Invalid
+        }
+        4 => match vec[0] {
+            "try" => match vec[1] {
+                "calling" => match vec[2] {
+                    "Miss" => match vec[3] {
+                        "Potts" => Command::Try,
+                        _ => Command::Invalid
+                    },
+                    _ => Command::Invalid
+                },
+                _ => Command::Invalid
+            },
+            _ => Command::Invalid
+        }
+        _ => Command::Invalid
+    }
 }

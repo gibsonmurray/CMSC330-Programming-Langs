@@ -121,10 +121,9 @@ pub fn factorize(n: u32) -> Vec<u32> {
 **/
 pub fn rotate(lst: &[i32]) -> Vec<i32> {
     let mut ans = vec![];
-    for i in 1..lst.len() {
-        ans.push(lst[i]);
+    for i in 0..lst.len() {
+        ans.push(lst[(i + 1) % lst.len()]);
     }
-    ans.push(lst[0]);
     ans
 }
 
@@ -135,17 +134,17 @@ pub fn rotate(lst: &[i32]) -> Vec<i32> {
     Ex: "ace" is a substring of "rustacean"
 **/
 pub fn substr(s: &String, target: &str) -> bool {
-    for i in 0..s.len() {
-        if s.chars().nth(i).unwrap() == target.chars().nth(0).unwrap() {
-            let mut flag = true;
-            for j in 1..target.len() {
-                if s.chars().nth(j).unwrap() != target.chars().nth(j).unwrap() {
-                    flag = false;
-                }
-            }
-            if flag {
-                return true
-            }
+    let s_len = s.len();
+    let target_len = target.len();
+    if target_len == 0 {
+        return true;
+    }
+    if s_len < target_len {
+        return false;
+    }
+    for i in 0..(s_len - target_len + 1) {
+        if s[i..i+target_len].eq(target) {
+            return true;
         }
     }
     false
