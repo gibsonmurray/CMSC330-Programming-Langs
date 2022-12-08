@@ -1,16 +1,15 @@
 use core::panic;
-use std::clone;
+use std::{clone, vec};
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 
 pub trait PriorityQueue<T: PartialOrd> {
     fn enqueue(&mut self, ele: T) -> ();
     fn dequeue(&mut self) -> Option<T>;
     fn peek(&self) -> Option<&T>;
-    fn enqueue_minheapify(&mut self) -> ();
-    fn dequeue_minheapify(&mut self) -> ();
-    fn num_of_children (&self, idx: usize) -> usize;
+    fn sift_up(&mut self, index: usize) -> ();
+    fn sift_down(&mut self, current_node: usize);
 }
 
 /**
@@ -42,54 +41,16 @@ impl<T> PartialEq for Node<T> {
 **/
 impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
 
-    /** helper function for enqueue */
-    fn enqueue_minheapify(&mut self) -> () {
-        let mut i = 1;
-        while i < self.len() {
-            if self[i] < self[(i - 1) / 2] {
-                self.swap(i, (i - 1) / 2);
-                i = 1;
-            }
-            else {
-                i += 1;
-            }
+    // This method will move a value up the heap until it is in the correct position
+    fn sift_up(&mut self, index: usize) {
+        if index == 0 {
+            return;
         }
-    }
-
-    fn dequeue_minheapify(&mut self) -> () {
-        let mut i = 0;
-        let mut childs = self.num_of_children(i);
-        while childs > 0 {
-            if childs == 1 && self[i] > self[2 * i + 1] {
-                self.swap(i, 2 * i + 1);
-                i = 2 * i + 1;
-            }
-            else if self[i] > self[2 * i + 1] && self[i] > self[2 * i + 2]{
-                if self[2 * i + 1] < self[2 * i + 2] {
-                    self.swap(i, 2 * i + 1);
-                    i = 2 * i + 1;
-                }
-                else {
-                    self.swap(i, 2 * i + 2);
-                    i = 2 * i + 2;   
-                }
-            }
-            else {
-                break;
-            }
-            childs = self.num_of_children(i);
+        let parent_index = (index - 1) / 2;
+        if self[index] < self[parent_index] {
+            self.swap(index, parent_index);
+            self.sift_up(parent_index);
         }
-    }
-
-    fn num_of_children (&self, idx: usize) -> usize {
-        let mut ans = 0;
-            if (2 * idx + 1) < self.len() {
-                ans += 1;
-                if (2 * idx + 2) < self.len() {
-                    ans += 1;
-                }
-            }
-        ans
     }
 
     /**
@@ -101,7 +62,8 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
     
     fn enqueue(&mut self, ele: T) -> () {
         self.push(ele);
-        self.enqueue_minheapify();
+        let index = self.len() - 1;
+        self.sift_up(index);
     }
 
     /**
@@ -112,14 +74,37 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
         Return None if the queue was initially empty, Some(T) otherwise.
     **/
     fn dequeue(&mut self) -> Option<T> {
-        let n = self.len();
-        self.swap(0, n - 1);
-        let ans = self.pop();
-        if self.len() > 0 {
-            self.dequeue_minheapify();
+        if self.is_empty() {
+            return None;
         }
+        let size = self.len();
+        self.swap(0, size - 1);
+        let ans = self.pop();
+        self.sift_down(0);
         return ans;
     }
+
+    // This method moves an element down until it is in its proper position
+    fn sift_down(&mut self, current_node: usize) {
+        let left_child = 2 * current_node + 1;
+        let right_child = 2 * current_node + 2;
+    
+        if left_child >= self.len() {
+            return;
+        }
+    
+        let mut min_child = left_child;
+        if right_child < self.len() && self[right_child] < self[left_child] {
+            min_child = right_child;
+        }
+    
+        if self[current_node] > self[min_child] {
+            self.swap(current_node, min_child);
+            self.sift_down(min_child);
+        }
+    }
+
+    
 
     /**
         This function returns the element that would be removed
@@ -163,36 +148,19 @@ pub fn distance(p1: (i32,i32), p2: (i32,i32)) -> i32 {
     for more details on how to choose which enemy.
 **/
 pub fn target_locator<'a>(allies: &'a HashMap<&String, (i32,i32)>, enemies: &'a HashMap<&String, (i32,i32)>) -> (&'a str,i32,i32) {
-    let mut stark_q = Vec::new();
-    let stark_loc = match allies.get(&String::from("Stark")) {
-        Some(x) => x.clone(),
-        None => panic!("error: stark_loc was None, expected Some(coordinate)")
-    };
-    let mut stark_e_loc = (0, 0);
-    for (e_key, e_value) in enemies.clone() {
-        stark_q.enqueue(Node{ priority: distance(stark_loc, e_value), data: (e_key, e_value) });
-        stark_e_loc = e_value;
-    }
-    for (a_key, a_value) in allies.clone() {
-        let root = match stark_q.peek() {
-            Some(x) => x.clone(),
-            None => panic!("error: root was None, expected Some(Node)")
-        };
-        if (a_key.eq(&String::from("Stark"))) && (distance(a_value, stark_e_loc) < root.priority) {
-            stark_q.dequeue();
-            match stark_q.peek() {
-                Some(x) => match x.data {
-                    (_, pos) => stark_e_loc = pos
-                },
-                None => panic!("error: root was None, expected returning Node")
-            }
+    let mut heap = vec![];
+    for (a_name, a_loc) in allies {
+        for (e_name, e_loc) in enemies {
+            let dist = distance(a_loc.clone(), e_loc.clone());
+            heap.enqueue(Node{ priority: dist, data: (a_name, e_name) });
         }
     }
-    match stark_q.peek() {
-        Some(x) => match x.data {
-            (name, (x, y)) => (name, x, y)
-        },
-        None => panic!("error: rootwas None, expected returning Node")
+    let mut root = heap.dequeue().unwrap();
+    while root.data.0 != &&String::from("Stark") {
+        root = heap.dequeue().unwrap();
+    }
+    match enemies.get(root.data.1).unwrap() {
+        (x, y) => (root.data.1, *x, *y)
     }
 }
 

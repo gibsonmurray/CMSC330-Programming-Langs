@@ -73,6 +73,20 @@ fn student_queue() {
     assert_eq!(3, q[2]);
     assert_eq!(5, q[3]);
 
+    q.enqueue(6);
+    q.enqueue(3);
+    q.enqueue(5);
+    q.enqueue(8);
+    q.enqueue(9);
+    q.enqueue(1);
+
+    q.dequeue();
+    q.dequeue();
+
+
+
+
+
 }
 
 #[test]
@@ -93,4 +107,26 @@ fn student_queue2() {
     assert_eq!("B", q[1].data);
     assert_eq!("A", q[2].data);
 
+}
+
+#[test]
+fn student_test_locator() {
+    let mut allies = HashMap::new();
+    let stark = "Stark".to_string();
+    let hulk = "Hulk".to_string();
+    let cap = "Cap".to_string();
+    allies.insert(&stark, (3 as i32,7 as i32));
+    allies.insert(&hulk, (4 as i32,4 as i32));
+    allies.insert(&cap, (6 as i32,4 as i32));
+
+    let mut enemies = HashMap::new();
+    let thanos = "Thanos".to_string();
+    let ebony = "Ebony Maw".to_string();
+    let joe = "Joe".to_string();
+    enemies.insert(&thanos, (5 as i32,2 as i32));
+    enemies.insert(&ebony, (1 as i32,5 as i32));
+    enemies.insert(&joe, (7 as i32,2 as i32));
+
+
+    assert_eq!(("Ebony Maw", 1, 5), target_locator(&allies, &enemies));
 }
