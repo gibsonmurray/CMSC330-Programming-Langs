@@ -41,6 +41,18 @@ impl<T> PartialEq for Node<T> {
 **/
 impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
 
+    /**
+        This functions pushes a given element onto the queue and
+        reorders the queue such that the min heap property holds.
+        See the project specifications for more details on how this
+        works.
+    **/
+    fn enqueue(&mut self, ele: T) -> () {
+        self.push(ele);
+        let index = self.len() - 1;
+        self.sift_up(index);
+    }
+
     // This method will move a value up the heap until it is in the correct position
     fn sift_up(&mut self, index: usize) {
         if index == 0 {
@@ -51,19 +63,6 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
             self.swap(index, parent_index);
             self.sift_up(parent_index);
         }
-    }
-
-    /**
-        This functions pushes a given element onto the queue and
-        reorders the queue such that the min heap property holds.
-        See the project specifications for more details on how this
-        works.
-    **/
-    
-    fn enqueue(&mut self, ele: T) -> () {
-        self.push(ele);
-        let index = self.len() - 1;
-        self.sift_up(index);
     }
 
     /**
@@ -155,13 +154,21 @@ pub fn target_locator<'a>(allies: &'a HashMap<&String, (i32,i32)>, enemies: &'a 
             heap.enqueue(Node{ priority: dist, data: (a_name, e_name) });
         }
     }
-    let mut root = heap.dequeue().unwrap();
-    while root.data.0 != &&String::from("Stark") {
-        root = heap.dequeue().unwrap();
+    let mut allies_seen = HashSet::new();
+    let mut enemies_seen = HashSet::new();
+    let mut allies_and_enemies = HashMap::new();
+    while heap.len() > 0 {
+        let names = heap.dequeue().unwrap().data;
+        let ally = *names.0;
+        let enemy = *names.1;
+        if !allies_seen.contains(ally) && !enemies_seen.contains(enemy) {
+            allies_seen.insert(ally);
+            enemies_seen.insert(enemy);
+            allies_and_enemies.insert(ally, enemy);
+        }
     }
-    match enemies.get(root.data.1).unwrap() {
-        (x, y) => (root.data.1, *x, *y)
+    match allies_and_enemies.get(&String::from("Stark")) {
+        Some(enemy) => { let (x, y) = enemies.get(enemy).unwrap(); (*enemy, *x, *y) }
+        None => panic!("error: Stark does not have a matched enemy")
     }
 }
-
-
