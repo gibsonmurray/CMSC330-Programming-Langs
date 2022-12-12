@@ -8,8 +8,8 @@ pub trait PriorityQueue<T: PartialOrd> {
     fn enqueue(&mut self, ele: T) -> ();
     fn dequeue(&mut self) -> Option<T>;
     fn peek(&self) -> Option<&T>;
-    fn sift_up(&mut self, index: usize) -> ();
-    fn sift_down(&mut self, current_node: usize);
+    fn sift_up(&mut self, idx: usize) -> ();
+    fn sift_down(&mut self, idx: usize);
 }
 
 /**
@@ -49,19 +49,19 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
     **/
     fn enqueue(&mut self, ele: T) -> () {
         self.push(ele);
-        let index = self.len() - 1;
-        self.sift_up(index);
+        let idx = self.len() - 1;
+        self.sift_up(idx);
     }
 
     // This method will move a value up the heap until it is in the correct position
-    fn sift_up(&mut self, index: usize) {
-        if index == 0 {
+    fn sift_up(&mut self, idx: usize) {
+        if idx == 0 {
             return;
         }
-        let parent_index = (index - 1) / 2;
-        if self[index] < self[parent_index] {
-            self.swap(index, parent_index);
-            self.sift_up(parent_index);
+        let p_idx = (idx - 1) / 2;
+        if self[idx] < self[p_idx] {
+            self.swap(idx, p_idx);
+            self.sift_up(p_idx);
         }
     }
 
@@ -84,21 +84,18 @@ impl<T: PartialOrd> PriorityQueue<T> for Vec<T> {
     }
 
     // This method moves an element down until it is in its proper position
-    fn sift_down(&mut self, current_node: usize) {
-        let left_child = 2 * current_node + 1;
-        let right_child = 2 * current_node + 2;
-    
+    fn sift_down(&mut self, idx: usize) {
+        let left_child = 2 * idx + 1;
+        let right_child = 2 * idx + 2;
         if left_child >= self.len() {
             return;
         }
-    
         let mut min_child = left_child;
         if right_child < self.len() && self[right_child] < self[left_child] {
             min_child = right_child;
         }
-    
-        if self[current_node] > self[min_child] {
-            self.swap(current_node, min_child);
+        if self[idx] > self[min_child] {
+            self.swap(idx, min_child);
             self.sift_down(min_child);
         }
     }
